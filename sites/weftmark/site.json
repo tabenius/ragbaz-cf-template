@@ -1,0 +1,27 @@
+{
+  "schema": "ragbaz.project-site/v1",
+  "modules": { "reader": true, "publications": true },
+  "socialCard": true,
+  "products": [{ "id": "weftmark", "name": "WeftMark", "lifecycle": "prototype", "capabilities": ["change-sets", "evidence", "review", "handoff"] }],
+  "locales": [{ "code": "en", "label": "English", "dir": "ltr" }, { "code": "sv", "label": "Svenska", "dir": "ltr" }],
+  "translations": {
+    "sv": { "title": "WeftMark", "description": "Beständiga underlag för programvaruarbete med människor och AI-agenter.", "sections": [{ "id": "purpose", "title": "Arbetet ska gå att följa", "paragraphs": ["WeftMark håller samman uppgiftens syfte, omfattning, Git-historik, verifieringsunderlag, granskning och överlämning. Projektet är en prototyp.", "Frog samordnar fortfarande uppgifter och lås under övergången. Webbplatsen presenterar projektet; den lokala liggaren är fortsatt källa för arbetets underlag."] }] }
+  },
+  "pages": [{ "id": "workflow", "path": "/workflow/", "kind": "article", "title": "Working with evidence", "description": "A short guide to WeftMark's distinct implementation, verification and review states.", "status": "published", "created": "2026-10-03", "published": "2026-10-03", "updated": "2026-10-03", "tags": ["evidence", "workflow"], "sections": [{ "id": "states", "title": "Keep the states distinct", "paragraphs": ["A Change Set binds work to a purpose, declared scopes and Git lineage. Verification evidence describes the exact work it checks; review and publication remain separate decisions.", "Read the repository working protocol before changing code. Frog task assignments and locks remain mandatory during the migration."] }] }],
+  "slug": "weftmark",
+  "name": "WeftMark",
+  "origin": "https://weftmark.ragbaz.cc",
+  "tagline": "Durable evidence around transient software work.",
+  "description": "A vendor-neutral control plane for multi-agent software work: scope, Git lineage, evidence, review and handoff remain inspectable after an agent session ends.",
+  "status": "Prototype · local runtime and review surfaces implemented",
+  "updated": "2026-10-03",
+  "links": [
+    { "label": "Source & installation", "href": "https://github.com/tabenius/WeftMark" },
+    { "label": "Working protocol", "href": "https://github.com/tabenius/WeftMark/blob/main/AGENTS.md" }
+  ],
+  "sections": [
+    { "id": "provenance", "title": "Can we explain what happened?", "paragraphs": ["Change Sets bind work to its purpose, declared file and semantic scopes, Git base, branch and worktree. Evidence, review decisions and handoffs are durable records rather than claims in a chat transcript.", "Implemented, verified, reviewed and releasable are separate states. A passing command is not proof of publication or an independent review."] },
+    { "id": "ecosystem", "title": "One responsibility, explicit connections", "paragraphs": ["Frog remains the operational scheduler and lock coordinator during the migration. Sylvae can produce run evidence; Nostoi verifies compatible audit chains; Rebekah packages the self-hosted runtime.", "The website introduces the project. Its local ledger and runtime retain authority over engineering work; this page does not expose a remote claim, evidence-execution or review API."] },
+    { "id": "start", "title": "Start locally", "paragraphs": ["Install from the source checkout with Python 3.11 or later. Read the installation guide and repository working protocol, then inspect the task, Change Set and evidence interfaces in the CLI."] }
+  ]
+}

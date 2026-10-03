@@ -1,0 +1,23 @@
+{
+  "schema": "ragbaz.project-site/v1",
+  "modules": { "reader": true, "publications": true },
+  "socialCard": true,
+  "products": [{ "id": "nostoi", "name": "Nostoi", "lifecycle": "development", "capabilities": ["chain-verification", "attestations", "anchoring"] }],
+  "pages": [{ "id": "verification", "path": "/verification/", "kind": "article", "title": "What a verified chain tells you", "description": "Integrity, external checkpoints and signer identity answer different questions.", "status": "published", "created": "2026-10-03", "published": "2026-10-03", "updated": "2026-10-03", "tags": ["integrity", "attestations"], "sections": [{ "id": "boundaries", "title": "Three distinct questions", "paragraphs": ["Digest links detect inconsistencies within the chain. A previously trusted external head is needed to detect tail removal or a completely recomputed history.", "A signature identifies a signing key under a verification policy. It does not prove that a test passed, or independently establish when another party observed the head."] }] }],
+  "slug": "nostoi",
+  "name": "Nostoi",
+  "origin": "https://nostoi.ragbaz.cc",
+  "tagline": "Records that should survive. Chains you can verify.",
+  "description": "A Rust library, CLI and terminal interface for verifying, appending, streaming and browsing tamper-evident audit chains.",
+  "status": "Active development · registry publication pending",
+  "updated": "2026-10-03",
+  "links": [
+    { "label": "Source & formats", "href": "https://github.com/tabenius/nostoi" },
+    { "label": "Attestations", "href": "https://github.com/tabenius/nostoi/blob/main/docs/ATTESTATIONS.md" }
+  ],
+  "sections": [
+    { "id": "chains", "title": "Verify the history, locate the break", "paragraphs": ["Nostoi reads its own nostoi-v1 JSON Lines and append-only SQLite stores, WeftMark ledgers, and Ephor audit stores. Verification identifies the first inconsistent record; a broken chain is never extended.", "The portable core has no networking, CLI or Linux dependency. Native Python bindings and WebAssembly interfaces are available in the checkout."] },
+    { "id": "anchors", "title": "A chain is only part of the answer", "paragraphs": ["Hash links detect changes within a chain. Detecting a removed tail or a completely recomputed history needs a previously trusted head retained outside it.", "Remote checkpoints, multi-destination anchoring and signed attestations keep integrity, signer identity and external observation distinct. Signing keys belong with their operators, not in a public website Worker."] },
+    { "id": "ecosystem", "title": "Shared evidence infrastructure", "paragraphs": ["Nostoi gives Frog, Sylvae and other RAGBAZ projects a common chain format, and verifies the ledgers those projects already keep. This website publishes project information; it does not claim to verify an uploaded chain or signature."] }
+  ]
+}

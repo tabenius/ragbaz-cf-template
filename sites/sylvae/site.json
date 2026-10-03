@@ -1,0 +1,23 @@
+{
+  "schema": "ragbaz.project-site/v1",
+  "modules": { "reader": true, "publications": true },
+  "socialCard": true,
+  "products": [{ "id": "sylvae", "name": "Sylvae", "lifecycle": "development", "capabilities": ["skill-execution", "run-evidence", "review"] }],
+  "pages": [{ "id": "runs", "path": "/runs/", "kind": "article", "title": "From a skill run to evidence", "description": "Connect portable execution to a durable run record and WeftMark evidence.", "status": "published", "created": "2026-10-03", "published": "2026-10-03", "updated": "2026-10-03", "tags": ["skills", "evidence"], "sections": [{ "id": "identity", "title": "Correlate without inventing a result", "paragraphs": ["A coordinator may allocate a run ID before execution and use the same namespaced identity as WeftMark's evidence producer. Sylvae preserves the local run record; WeftMark classifies commit-bound command evidence.", "An unavailable backend is not a failed skill. Browser reads are not review decisions, and deliberate human signing is separate from a run outcome."] }] }],
+  "slug": "sylvae",
+  "name": "Sylvae",
+  "origin": "https://sylvae.ragbaz.cc",
+  "tagline": "Portable skills. Durable run evidence.",
+  "description": "Load a SKILL.md-format skill and run it against Ollama, Claude Code, Codex, OpenCode or the Anthropic API, with each run recorded as evidence.",
+  "status": "Active development · local runner and review server",
+  "updated": "2026-10-03",
+  "links": [
+    { "label": "Source & setup", "href": "https://github.com/tabenius/sylvae" },
+    { "label": "Run & review guide", "href": "https://github.com/tabenius/sylvae#run" }
+  ],
+  "sections": [
+    { "id": "skills", "title": "A skill stays portable", "paragraphs": ["Skills carry their instructions in an open SKILL.md format. Choose a backend and model explicitly, or configure routing by the skill's cheap, frontier or agent tier.", "CLI backends reuse the tools and accounts available on the host. Real runs carry real latency and cost; a run that cannot happen is unavailable, not a failed result."] },
+    { "id": "evidence", "title": "Runs become inspectable evidence", "paragraphs": ["Local JSON Lines preserve run records. A coordinator can preallocate a run ID and correlate it with WeftMark's evidence producer identity, while WeftMark retains authority over commit-bound evidence.", "The loopback review server can browse records and deliberately trigger real runs. Optional Nostoi audit chains and human signing workflows are separate from page views and run outcomes."] },
+    { "id": "start", "title": "Bring your own backend", "paragraphs": ["Install from a Python environment in the source checkout, configure an available backend, and run a local skill against an input file. This public site does not run skills, hold model credentials or expose the review server."] }
+  ]
+}

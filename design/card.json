@@ -1,0 +1,7 @@
+{
+  "width": 1200, "height": 630,
+  "gutter": 72, "brandY": 64, "titleY": 190, "taglineY": 335, "footerY": 540,
+  "brandScale": 4, "titleScale": 12, "bodyScale": 4,
+  "lineHeight": 42, "ruleHeight": 4,
+  "paperRole": "paper-page", "inkRole": "ink-emphasis", "accentRole": "ink-link"
+}

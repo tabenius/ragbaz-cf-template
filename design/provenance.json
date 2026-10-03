@@ -1,0 +1,7 @@
+{
+  "schema": "ragbaz.design-vendor/v0",
+  "source": "library/public/assets/tokens.css",
+  "revision": "ca2f1cebb301aa49b4f49ce841084ade559e9023",
+  "sha256": "4be280d1a85c29c7f8e27ea9c82e01b279a8dfef8d4e9f7c71f96bf229a5bea9",
+  "note": "Library deployment assets are generated; digest identifies the exact bytes independently of repository revision. Current build source: school-scarcity-wireless-hacking/001-opencode-draft/design/tokens.css."
+}

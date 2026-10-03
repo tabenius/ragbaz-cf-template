@@ -1,0 +1,9 @@
+node_modules/
+build/
+.wrangler/
+.dev.vars*
+.env*
+wrangler.production.json*
+*.swp
+*.swo
+*~

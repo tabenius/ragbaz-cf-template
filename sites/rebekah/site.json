@@ -1,0 +1,24 @@
+{
+  "schema": "ragbaz.project-site/v1",
+  "modules": { "reader": true, "publications": true },
+  "socialCard": true,
+  "products": [{ "id": "rebekah", "name": "Rebekah", "lifecycle": "prototype", "capabilities": ["oci-runtime", "service-isolation", "authenticated-gateway"] }],
+  "pages": [{ "id": "deployment", "path": "/deployment/", "kind": "article", "title": "Deployment boundaries", "description": "The project website, authenticated gateway and self-hosted services have different responsibilities.", "status": "published", "created": "2026-10-03", "published": "2026-10-03", "updated": "2026-10-03", "tags": ["runtime", "deployment"], "sections": [{ "id": "runtime", "title": "Keep the runtime self-hosted", "paragraphs": ["Cloudflare serves this website. Rebekah's Nix-built OCI runtime hosts the agent, inference and evidence services on the operator's machine.", "Follow the canonical deployment contract for image pins, per-service isolation, secret injection and container verification. Ephor remains an explicit opt-in integration."] }] }],
+  "slug": "rebekah",
+  "name": "Rebekah",
+  "origin": "https://rebekah.ragbaz.cc",
+  "tagline": "A reproducible home for governed agentic work.",
+  "description": "A self-hosted, Nix-built OCI runtime combining local inference, agent execution, engineering provenance and durable review evidence.",
+  "status": "Executable bootstrap · not yet a production distribution",
+  "updated": "2026-10-03",
+  "links": [
+    { "label": "Source & runtime", "href": "https://github.com/tabenius/rebekah" },
+    { "label": "Deployment contract", "href": "https://github.com/tabenius/rebekah/blob/main/docs/deployment.md" },
+    { "label": "Ephor governance", "href": "https://ephor.ragbaz.cc" }
+  ],
+  "sections": [
+    { "id": "runtime", "title": "One runtime, distinct responsibilities", "paragraphs": ["OpenCode handles interactive agents; Ollama provides local inference; Sylvae runs portable skills; WeftMark keeps engineering provenance and review evidence. Nostoi provides audit-chain tooling.", "Services run with separate identities and state directories. Loopback services are reached through an authenticated, allow-listed gateway; runtime secrets are injected rather than included in the image."] },
+    { "id": "governance", "title": "Governance is an explicit integration", "paragraphs": ["Ephor is opt-in. The public baseline image works without it; the separate governed image includes the fail-closed connector and oversight path.", "Ephor was formerly KAGP, the Konsonans AI Governance Platform. Older documentation and integration names may use that name; they refer to the same project's earlier identity."] },
+    { "id": "deploy", "title": "Build, pin, verify", "paragraphs": ["Follow the deployment contract to build with Nix, inject secrets at runtime, pin the image by digest or image ID, and verify it in a real container. Local service health is distinct from this website's health endpoint.", "Cloudflare hosts this project website. The self-hosted OCI services and authenticated gateway remain on the operator's runtime host."] }
+  ]
+}

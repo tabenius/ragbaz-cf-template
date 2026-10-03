@@ -1,0 +1,23 @@
+/* Website-specific layout roles. Shared palette/type/space come from tokens.css. */
+:root {
+  --site-width: 72rem;
+  --site-hero-size: clamp(2.488rem, 7vw, 5rem);
+  --site-rule: 1px;
+  --site-focus: 3px;
+  --site-focus-offset: 3px;
+  --site-weight-bold: 700;
+  --site-zero: 0;
+  --site-full: 100%;
+  --site-tracking: 0.08em;
+  --reader-font-sans: system-ui, sans-serif;
+  --reader-sepia-paper: #f7f2e7; /* fleet paper-inset */
+  --reader-night-paper: #17150f; /* fleet ink-emphasis */
+  --reader-night-inset: #2b2822; /* fleet ink-body */
+  --reader-night-rule: #6d6659; /* fleet ink-muted */
+  --reader-night-ink: #f6f2e9; /* fleet ink-invert */
+  --reader-night-muted: #ded5c2; /* fleet paper-rule */
+  --reader-night-link: #f3c46c; /* www.ragbaz orange-1 */
+  --site-card-min: 18rem;
+  --site-print-a4-margin: 18mm;
+  --site-print-a5-margin: 12mm;
+}

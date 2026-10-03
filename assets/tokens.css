@@ -1,0 +1,240 @@
+/* ============================================================================
+   tokens.css — the single source of design truth.
+
+   Consumed by BOTH media: the screen stylesheet and the print stylesheet read
+   these custom properties. If a value appears here it must not be re-stated in
+   a stylesheet; if it must differ between media it gets its own override block
+   in print.css keyed off the same token name.
+
+   Naming:  --<category>-<role>-<variant>
+             e.g. --box-artist-edge, --ink-body, --space-3
+
+   Rule: no literal colour, size or duration outside this file, except inside
+   SVG assets (which reference the tokens via currentColor or a class).
+   ========================================================================= */
+
+:root {
+  /* --- Type families -------------------------------------------------------
+     All local to the system; nothing is fetched at build time. Chosen for
+     book-ness: Pagella is a Palatino-lineage text face with real italics and
+     small caps, and reads well at 10pt on paper.                              */
+  --font-text: "TeX Gyre Pagella", "URW Palladio L", "Palatino Linotype",
+               Palatino, "Book Antiqua", Georgia, serif;
+  --font-display: "TeX Gyre Schola", "URW Bookman L", "Bookman Old Style",
+                  var(--font-text);
+  --font-mono: "Fira Code", "DejaVu Sans Mono", ui-monospace, monospace;
+  --font-symbol: "DejaVu Sans", "Noto Sans Symbols 2", sans-serif;
+
+  /* --- Type scale ----------------------------------------------------------
+     A modular scale, ratio 1.200 (minor third) at the small end. Sizes are
+     rem so the screen medium can respond to a user font-size without breaking
+     the print medium, which pins html font-size in print.css.               */
+  --type--2: 0.694rem;  /*  ~11.1px — table, caption, marginal            */
+  --type--1: 0.833rem;  /*  ~13.3px — small text, code inline             */
+  --type-0:  1.000rem;  /*  16px   — body                                  */
+  --type-1:  1.200rem;
+  --type-2:  1.440rem;  /*  — section title (§)                            */
+  --type-3:  1.728rem;  /*  — chapter title in running head               */
+  --type-4:  2.074rem;  /*  — part title                                  */
+  --type-5:  2.488rem;  /*  — chapter opener                              */
+
+  --leading-tight: 1.15;
+  --leading-snug:  1.30;
+  --leading-body:  1.52;
+  --leading-loose: 1.70;
+
+  --measure: 34rem;         /* comfortable line length on screen          */
+  --measure-print: 118mm;   /* text column width on paper                  */
+
+  /* --- Space ---------------------------------------------------------------
+     4pt base. Everything is a multiple, so vertical rhythm survives.       */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* --- Ink (text) ----------------------------------------------------------
+     A warm near-black on a warm paper. Not #000 on #fff: the book is a
+     printed object and pure black on pure white vibrates badly.             */
+  --ink-emphasis: #17150f;   /* headings                                     */
+  --ink-body:     #2b2822;   /* running text                                 */
+  --ink-muted:    #6d6659;   /* captions, margins, as-of markers             */
+  --ink-faint:    #a39a8b;   /* rules, ornaments                             */
+  --ink-invert:   #f6f2e9;   /* text on a dark fill                          */
+  --ink-link:     #7a4b12;   /* ochre — reads as ink, not as a web blue      */
+  --ink-code:     #234a63;   /* slate                                        */
+
+  /* --- Paper --------------------------------------------------------------- */
+  --paper-page:   #fffdf8;
+  --paper-inset:  #f7f2e7;   /* tables, plates, figures ground               */
+  --paper-raise:  #ffffff;   /* code blocks, boxes                           */
+  --paper-rule:   #ded5c2;
+
+  /* --- Screen-only surfaces ------------------------------------------------
+     Reader chrome (header, drawer, controls). Values match the rendered
+     surface; themes.css swaps them wholesale under html[data-theme].       */
+  --paper-chrome: #faf8f0;   /* header/drawer bars, screen only             */
+  --paper-screen: #f5f2e9;   /* body background behind the page, screen only*/
+  --chrome-edge:  #d5d1c5;   /* hairlines between chrome regions            */
+  --chrome-ink:   #626458;   /* secondary text in the chrome                */
+  --control-edge: #76776b;   /* button/select borders                       */
+  --control-surface: #ffffff;/* button/select fill                          */
+  --control-ink:  #222222;   /* button/select label                         */
+  --focus-ring:   #91682c;   /* keyboard focus outline                      */
+  --scrim:        rgba(37, 39, 31, 0.35);  /* drawer backdrop              */
+  --shadow-drawer: rgba(0, 0, 0, 0.12);
+  --texture-ink:  rgba(37, 39, 31, 0.045); /* paper microtexture strokes    */
+
+  /* ==== BOX SYSTEM ======================================================
+     Structure is identical for every box; only the five archetype/functional
+     variables change. A box therefore reads as:
+       surface · edge (left rule) · icon colour · label colour
+     The left rule is the box's "spine" and is what makes the archetype
+     legible at a glance on a crowded page.                                */
+  --box-pad-y: var(--space-3);
+  --box-pad-x: var(--space-4);
+  --box-radius: 2px;
+  --box-spine: 3px;
+
+  /* --- archetype: the way of the artist ---------------------------------
+     Warm, alive, the colour of a lit palette. */
+  --box-artist-surface: #fdf4ec;
+  --box-artist-edge:    #c2681f;
+  --box-artist-ink:     #7a3d0c;
+  --box-artist-rule:    #eddcc7;
+
+  /* --- archetype: the way of the mystic ---------------------------------
+     Cool violet, the colour of a dark room and a long integration. */
+  --box-mystic-surface: #f3f1fb;
+  --box-mystic-edge:    #6b4fa8;
+  --box-mystic-ink:     #43326e;
+  --box-mystic-rule:    #ded8ef;
+
+  /* --- archetype: the way of the hacker ---------------------------------
+     Phosphor green on near-black: terminal. The only inverted archetype,
+     because this register genuinely reads as a screen.                      */
+  --box-hacker-surface: #16211b;
+  --box-hacker-edge:    #4fd07a;
+  --box-hacker-ink:     #d6f2df;
+  --box-hacker-rule:    #2c4034;
+  --box-hacker-accent:  #7fe6a2;   /* code, register names inside the box  */
+
+  /* --- archetype: the way of the repairman ------------------------------
+     Olive/steel: workbench, not laboratory. */
+  --box-repairman-surface: #f1f4ec;
+  --box-repairman-edge:    #5c6b39;
+  --box-repairman-ink:     #38421f;
+  --box-repairman-rule:    #d9e0cb;
+
+  /* --- functional: principle ---------------------------------------------
+     The takeaway. Yellow, like a pencil mark in the margin.               */
+  --box-principle-surface: #fdf9e3;
+  --box-principle-edge:    #b8960c;
+  --box-principle-ink:     #6b5606;
+  --box-principle-rule:    #eee4b8;
+
+  /* --- functional: safety -------------------------------------------------
+     Red, high contrast, never softened. SAFETY IS NOT A BRAND COLOUR. */
+  --box-safety-surface: #fdeeee;
+  --box-safety-edge:    #b3261e;
+  --box-safety-ink:     #7d1a15;
+  --box-safety-rule:    #f2cfcd;
+  --box-safety-warn:    #b3261e;
+
+  /* --- functional: law ----------------------------------------------------
+     Deep blue: institutional.                                                */
+  --box-law-surface: #eef3fa;
+  --box-law-edge:    #2b5c9b;
+  --box-law-ink:     #1d3f6b;
+  --box-law-rule:    #ccdcef;
+
+  /* --- functional: prax ----------------------------------------------------
+     Neutral ink: procedure is not a personality.                            */
+  --box-prax-surface: #f4f4f1;
+  --box-prax-edge:    #4a4a44;
+  --box-prax-ink:     #2c2c28;
+  --box-prax-rule:    #dedcd4;
+
+  /* --- functional: deep ----------------------------------------------------
+     Slated paper for formal mathematics.                                   */
+  --box-deep-surface: #f6f8fa;
+  --box-deep-edge:    #4a6b8a;
+  --box-deep-ink:     #2b4257;
+  --box-deep-rule:    #d8e0e8;
+
+  /* --- functional: gloss / exercise / erratum / aside ---------------------- */
+  --box-gloss-surface: #f7f6f1;
+  --box-gloss-edge:    #8a8374;
+  --box-gloss-ink:     #4c4739;
+  --box-gloss-rule:    #e0ddd2;
+
+  --box-exercise-surface: #eef7ef;
+  --box-exercise-edge:    #3f7d46;
+  --box-exercise-ink:     #26562b;
+  --box-exercise-rule:    #cfe3d1;
+
+  --box-erratum-surface: #fff8e6;
+  --box-erratum-edge:    #8a6d1a;
+  --box-erratum-ink:     #5c4810;
+  --box-erratum-rule:    #ecdcaf;
+
+  --box-aside-surface: #f7f6f1;
+  --box-aside-edge:    #b8b1a0;
+  --box-aside-ink:     #5c574b;
+  --box-aside-rule:    #e6e2d8;
+
+  /* --- functional: outcomes / lab / model ---------------------------------- */
+  --box-outcomes-surface: #f0f5ee;
+  --box-outcomes-edge:    #45634b;
+  --box-outcomes-ink:     #253526;
+
+  --box-lab-surface: #f1f4f7;
+  --box-lab-edge:    #536374;
+  --box-lab-ink:     #25313d;
+
+  --box-model-surface: #f7f5ed;
+  --box-model-edge:    #80734e;
+  --box-model-ink:     #3e392a;
+
+  /* ==== FIGURES & TABLES ================================================= */
+  --figure-ground: var(--paper-inset);
+  --figure-edge:   #ded5c2;
+  --caption-ink:   var(--ink-muted);
+  --caption-size:  var(--type--1);
+
+  /* ==== CODE ============================================================= */
+  --code-surface:      #f5f3ec;
+  --code-edge:         #e2ddcf;
+  --code-ink:          #234a63;
+  --code-linenumber:   #a39a8b;
+  --code-keyword:      #8a2f6a;
+  --code-string:       #2f6b34;
+  --code-comment:      #8a8374;
+  --code-number:       #a3541a;
+
+  /* ==== MATH ============================================================= */
+  --math-ink: var(--ink-body);
+
+  /* ==== LINKS ============================================================ */
+  --link-decoration: underline;
+  --link-decoration-thickness: from-font;
+  --link-underline-offset: 0.14em;
+
+  /* ==== PAGE FURNITURE =================================================== */
+  --rule-hairline: 0.5pt;
+  --rule-thin:     0.8pt;
+  --rule-medium:   1.4pt;
+  --running-head-size: var(--type--2);
+  --folio-size:        var(--type-0);
+
+  /* ==== MOTION ===========================================================
+     Only the screen medium honours these; print.css sets them to 0.     */
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --ease-out: cubic-bezier(0.2, 0.7, 0.3, 1);
+}

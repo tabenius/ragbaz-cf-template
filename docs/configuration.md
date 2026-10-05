@@ -118,6 +118,18 @@ secret detector. Keep a private product's exact source allowlist and publisher.
 
 ## Contact adapter
 
+For a site using the shared `PEERS_DB`, `peerMaintenance: true` explicitly
+enables daily production expiration at 03:17 UTC when the database binding is
+configured. Preview builds have no database or cron. Nostoi is the first deployed
+maintenance owner; the existing WeftMark account-reconciliation schedule remains
+supported. Expiration acts on the namespaced peer tables, not legacy `leads`.
+
+Contact accepts exact JSON or URL-encoded media types, bounded UTF-8 bodies and
+object envelopes. Repeated form fields are refused rather than resolving consent
+and contact data from different values. Idempotent retries must match both content
+and source project/domain. Per-bucket limits stop increasing at their ceiling and
+429 responses report the remaining window in `Retry-After`.
+
 Enable `modules.contact` to serve `/contact/` and `POST /api/contact`.
 The endpoint accepts JSON `{ email, message, consent: true }`, up to 8 KiB.
 It requires Origin to match the canonical origin or an explicitly listed alias.

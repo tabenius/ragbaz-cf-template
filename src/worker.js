@@ -9,9 +9,11 @@ export { withSecurityHeaders } from './http.js';
 export function createSiteWorker(config, { adapters = [], assetManifest = null, release = null } = {}) {
   const site = validateSite(config);
   adapters = [...integrationAdapters(site), ...adapters];
+  const reservedApi = ['/api/contact', '/api/v1/site', '/api/v1/publications', '/api/v1/products'];
+  const overlaps = (a, b) => a === b || a.startsWith(b + '/') || b.startsWith(a + '/');
   for (const adapter of adapters) {
     if (!/^\/api\/[a-z][a-z0-9/-]*$/.test(adapter.prefix) || typeof adapter.fetch !== 'function' || !['public', 'authenticated'].includes(adapter.policy)) throw new Error('Invalid API adapter contract');
-    if (adapter.prefix === '/api/contact' || adapter.prefix === '/api/v1' || ['/api/v1/site', '/api/v1/publications', '/api/v1/products'].some(p => adapter.prefix === p || adapter.prefix.startsWith(p + '/')) || adapters.some(other => other !== adapter && (other.prefix === adapter.prefix || other.prefix.startsWith(adapter.prefix + '/') || adapter.prefix.startsWith(other.prefix + '/')))) throw new Error('Overlapping API adapter prefixes');
+    if (reservedApi.some(p => overlaps(adapter.prefix, p)) || adapters.some(other => other !== adapter && overlaps(other.prefix, adapter.prefix))) throw new Error('Overlapping API adapter prefixes');
   }
   const home = homePage(site);
   const missing = renderPage(site, { missing: true });
@@ -25,6 +27,9 @@ export function createSiteWorker(config, { adapters = [], assetManifest = null, 
       if (site.basePath && url.pathname === site.basePath) return finish(new Response(null, { status: 308, headers: { Location: mounted(site) + url.search } }));
       if (site.basePath && !url.pathname.startsWith(site.basePath + '/')) return html(missing, 404);
       const route = url.pathname.slice(site.basePath.length) || '/';
+      // A stripped locale must never become a protocol-relative Location.
+      // Reject ambiguous paths before redirects or adapter dispatch.
+      if (route.includes('//') || route.includes('\\')) return html(missing, 404);
       if (site.aliases.includes(url.origin)) return finish(new Response(null, { status: 308, headers: { Location: site.origin + url.pathname + url.search } }));
       for (const adapter of adapters) {
         if (route === adapter.prefix || route.startsWith(adapter.prefix + '/')) {

@@ -33,6 +33,15 @@ test('page routes, aliases and localized fallback have stable canonical identity
   assert.ok(fallback.includes('href="https://weftmark.ragbaz.cc/workflow/"'));
   assert.ok(!fallback.includes('hreflang="sv"'));
 });
+test('locale redirects reject protocol-relative paths and preserve ordinary queries', async () => {
+  const worker=createSiteWorker(base);
+  for(const path of ['/en//example.invalid','/en///example.invalid','/sv//example.invalid']) {
+    const response=await worker.fetch(request(path));
+    assert.equal(response.status,404);assert.equal(response.headers.get('Location'),null);
+  }
+  const response=await worker.fetch(request('/en/?next=https://example.invalid/'));
+  assert.equal(response.status,308);assert.equal(response.headers.get('Location'),'/?next=https://example.invalid/');
+});
 test('nested mounts prefix all links and strip only that prefix for assets', async () => {
   const config = { ...base, basePath: '/docs/project', routeZones: { [base.origin]: 'ragbaz.cc' } };
   const worker = createSiteWorker(config);
@@ -72,8 +81,13 @@ test('authenticated adapters retain cookies and force no-store; overlap is refus
   assert.equal(response.status, 200); assert.ok(response.headers.get('Set-Cookie').includes('session='));
   assert.equal(response.headers.get('Cache-Control'), 'private, no-store');
   assert.throws(() => createSiteWorker(base, { adapters: [{ prefix: '/api/v1/site', policy: 'public', fetch() {} }] }), /Overlapping/);
+  assert.throws(() => createSiteWorker(base, { adapters: [{ prefix: '/api/contact/submissions', policy: 'public', fetch() {} }] }), /Overlapping/);
   const failed = createSiteWorker(base, { adapters: [{ prefix: '/api/auth', policy: 'authenticated', fetch() { throw new Error('secret detail'); } }] });
   assert.equal((await failed.fetch(request('/api/auth'))).status, 503);
+});
+test('peer maintenance is explicit and requires contact to be enabled', () => {
+  for(const patch of [{peerMaintenance:'true'},{peerMaintenance:true,modules:{...base.modules,contact:false}}]) assert.throws(()=>validateSite({...base,...patch}),/Peer maintenance/);
+  assert.equal(validateSite({...base,peerMaintenance:true}).peerMaintenance,true);
 });
 test('shared header helper supports exact provider origins but refuses CSP injection', () => {
   const policy = { scripts: true, contact: true, scriptOrigins: ['https://challenges.cloudflare.com'], frameOrigins: ['https://challenges.cloudflare.com'] };
@@ -143,6 +157,25 @@ test('build inventories exact served assets and generates precise path-zone rout
     assert.ok(body.assets.every(a => a.path.startsWith('/docs/assets/') && /^[a-f0-9]{64}$/.test(a.sha256)));
     assert.ok(body.assets.some(a => a.path.endsWith('reader.js')));
   } finally { await rm(temp, { recursive: true, force: true }); }
+});
+test('peer maintenance schedules production expiration without account binding or preview cron', async () => {
+  const temp=await mkdtemp(join(tmpdir(),'cf-retention-'));
+  const previous=process.env.RAGBAZ_PEERS_D1_ID;
+  try {
+    process.env.RAGBAZ_PEERS_D1_ID='00000000-0000-0000-0000-000000000000';
+    const {writeFile}=await import('node:fs/promises');
+    const site={...base,slug:'retention-check',logo:undefined,peerMaintenance:true};
+    await writeFile(join(temp,'site.json'),JSON.stringify(site));
+    await buildProject(join(temp,'site.json'),join(temp,'build'));
+    const production=JSON.parse(await readFile(join(temp,'build/wrangler.production.json')));
+    const preview=JSON.parse(await readFile(join(temp,'build/wrangler.json')));
+    assert.deepEqual(production.triggers,{crons:['17 3 * * *']});
+    assert.deepEqual(production.d1_databases.map(d=>d.binding),['PEERS_DB']);
+    assert.equal(preview.triggers,undefined);assert.equal(preview.d1_databases,undefined);
+  }finally{
+    if(previous===undefined)delete process.env.RAGBAZ_PEERS_D1_ID;else process.env.RAGBAZ_PEERS_D1_ID=previous;
+    await rm(temp,{recursive:true,force:true});
+  }
 });
 test('build refuses unapproved assets and source-directory output; excludes draft text from Worker bundle', async () => {
   const temp = await mkdtemp(join(tmpdir(), 'cf-approval-'));

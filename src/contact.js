@@ -10,20 +10,20 @@ async function boundedText(request) {
       const { done, value } = await reader.read();
       if (done) break;
       size += value.byteLength;
-      if (size > MAX_BYTES) { await reader.cancel(); throw new Error('too_large'); }
+      if (size > MAX_BYTES) { await reader.cancel().catch(() => {}); throw new Error('too_large'); }
       chunks.push(value);
     }
   } finally { reader.releaseLock(); }
   const bytes = new Uint8Array(size); let offset = 0;
   for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
-  return new TextDecoder().decode(bytes);
+  return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
 }
 export async function contactRequest(request, env, site) {
   if (request.method !== 'POST') return new Response(null, { status: 405, headers: { Allow: 'POST', 'Cache-Control': 'no-store' } });
   if (![site.origin, ...site.aliases].includes(request.headers.get('Origin'))) return json({ error: 'origin_not_allowed' }, 403);
-  const contentType=request.headers.get('Content-Type')?.toLowerCase()||'';
-  const form=contentType.startsWith('application/x-www-form-urlencoded');
-  if (!contentType.startsWith('application/json') && !form) return json({ error: 'content_type_required' }, 415);
+  const contentType=(request.headers.get('Content-Type')||'').split(';',1)[0].trim().toLowerCase();
+  const form=contentType==='application/x-www-form-urlencoded';
+  if (contentType!=='application/json' && !form) return json({ error: 'content_type_required' }, 415);
   if (!env.PEERS_DB && (!env.CONTACT_SERVICE || !env.CONTACT_RATE_LIMITER || !env.CONTACT_HASH_KEY)) return json({ error: 'contact_unavailable' }, 503);
   if (Number(request.headers.get('Content-Length')) > MAX_BYTES) return json({ error: 'payload_too_large' }, 413);
   let body;
@@ -31,10 +31,16 @@ export async function contactRequest(request, env, site) {
     if (form) {
       // Reuse the streaming size limiter before parsing a native HTML form.
       const text=await boundedText(request);
-      const data=new URLSearchParams(text); body=Object.fromEntries(data);
+      const data=new URLSearchParams(text);
+      // Do not resolve consent from the first value and contact fields from the
+      // last value of a duplicated parameter. Reject ambiguity instead.
+      const fields=new Set();
+      for(const key of data.keys()) { if(fields.has(key)) throw new Error('duplicate_field'); fields.add(key); }
+      body=Object.fromEntries(data);
       for(const key of ['consent','attribution_consent','link_account']) body[key]=data.get(key)==='on';
     } else body = JSON.parse(await boundedText(request));
-  } catch (error) { return json({ error: error.message === 'too_large' ? 'payload_too_large' : 'invalid_json' }, error.message === 'too_large' ? 413 : 400); }
+  } catch (error) { return json({ error: error.message === 'too_large' ? 'payload_too_large' : error.message === 'duplicate_field' ? 'ambiguous_form' : 'invalid_body' }, error.message === 'too_large' ? 413 : 400); }
+  if (!body || typeof body!=='object' || Array.isArray(body)) return json({error:'invalid_body'},400);
   if (env.PEERS_DB) {
     try {
       const response=await peerContact(request,env,site,body);

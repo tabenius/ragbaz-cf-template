@@ -106,6 +106,7 @@ export async function buildProject(configPath, outputPath) {
       production.d1_databases.push({binding:'ACCOUNTS_DB',database_name:'ragbaz-cc-accounts',database_id:process.env.RAGBAZ_ACCOUNTS_D1_ID});
       production.triggers={crons:['17 3 * * *']};
     }
+    if(site.peerMaintenance) production.triggers={crons:['17 3 * * *']};
   }
   await writeFile(join(output, 'wrangler.production.json'), JSON.stringify(production, null, 2) + '\n');
   return output;

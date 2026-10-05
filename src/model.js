@@ -80,6 +80,7 @@ export function normalizeSite(input, safeLink) {
   translations(site.translations, site.locales, safeLink);
   site.modules ??= {};
   if (Object.keys(site.modules).some(k => !['reader', 'contact', 'publications', 'education'].includes(k)) || Object.values(site.modules).some(v => typeof v !== 'boolean')) throw new Error('Unknown module or non-boolean capability');
+  if (site.peerMaintenance !== undefined && (typeof site.peerMaintenance !== 'boolean' || (site.peerMaintenance && !site.modules.contact))) throw new Error('Peer maintenance needs an enabled contact module and boolean flag');
   site.integrations ??= {};
   for (const [name, config] of Object.entries(site.integrations)) validateIntegration(name, config);
   site.products = (site.products || []).map(publicProduct);

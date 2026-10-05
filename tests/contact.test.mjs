@@ -30,3 +30,23 @@ test('contact refuses rate limits and delivery failures without leaking internal
   const response = await worker.fetch(request(), failed);
   assert.equal(response.status, 503); assert.ok(!(await response.text()).includes('secret'));
 });
+test('contact requires exact media types and a JSON object envelope', async () => {
+  for (const type of ['application/jsonp', 'application/json-extra', 'application/x-www-form-urlencoded-extra']) {
+    assert.equal((await worker.fetch(request(payload, {'Content-Type':type}),env())).status,415);
+  }
+  assert.equal((await worker.fetch(request(payload, {'Content-Type':'Application/JSON; charset=utf-8'}),env())).status,202);
+  for (const body of [null,[],true,'not an envelope']) assert.equal((await worker.fetch(request(body),env())).status,400);
+});
+test('contact rejects corrupt UTF-8 and duplicated form fields before forwarding', async () => {
+  let forwarded=0;
+  const bindings=env();bindings.CONTACT_SERVICE.fetch=async()=>{forwarded++;return new Response(null,{status:202});};
+  const bytes=new TextEncoder().encode(JSON.stringify(payload));
+  const position=Buffer.from(bytes).indexOf('Hello');bytes[position]=0xc3;bytes[position+1]=0x28;
+  const invalid=new Request(base.origin+'/api/contact',{method:'POST',headers:{Origin:base.origin,'Content-Type':'application/json'},body:bytes});
+  assert.equal((await worker.fetch(invalid,bindings)).status,400);
+  for(const body of ['email=a@example.org&message=Hi&consent=on&consent=off','email=a@example.org&email=b@example.org&message=Hi&consent=on']) {
+    const form=new Request(base.origin+'/api/contact',{method:'POST',headers:{Origin:base.origin,'Content-Type':'application/x-www-form-urlencoded'},body});
+    const response=await worker.fetch(form,bindings);assert.equal(response.status,400);assert.equal((await response.json()).error,'ambiguous_form');
+  }
+  assert.equal(forwarded,0);
+});

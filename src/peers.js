@@ -51,8 +51,9 @@ export async function savePeerInterest(db, data, site, now) {
   // part of the stable retry digest. Source/page and declared values are.
   const digestInput = { ...data, observations:data.observations.map(({ observed_at, ...claim })=>claim) };
   const payloadHash = await hash(new TextEncoder().encode(JSON.stringify(digestInput)));
-  const existing = await db.prepare('SELECT payload_hash FROM ragbaz_interests WHERE id=?1').bind(data.id).first();
-  if (existing) return existing.payload_hash===payloadHash ? { ok:true,id:data.id,duplicate:true } : { conflict:true };
+  const matches = row => row?.payload_hash===payloadHash && row.project===site.slug && row.source_domain===new URL(site.origin).hostname;
+  const existing = await db.prepare('SELECT payload_hash,project,source_domain FROM ragbaz_interests WHERE id=?1').bind(data.id).first();
+  if (existing) return matches(existing) ? { ok:true,id:data.id,duplicate:true } : { conflict:true };
   const proposedPeer = crypto.randomUUID();
   await db.batch([
     db.prepare(`INSERT INTO ragbaz_peers(id,email_normalized,first_seen_at,last_seen_at,expires_at)
@@ -63,8 +64,8 @@ export async function savePeerInterest(db, data, site, now) {
       SELECT ?1,id,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,1,?12,?13,?14,?15,?16 FROM ragbaz_peers WHERE email_normalized=?17`)
       .bind(data.id,payloadHash,site.slug,new URL(site.origin).hostname,data.page,data.pageBasis,data.name||null,data.message,data.interest,now,data.clientTime,Number(data.attributionConsent),Number(data.accountLink),data.privacySignal,JSON.stringify(data.observations),later(now,180),data.email),
   ]);
-  const saved = await db.prepare('SELECT payload_hash FROM ragbaz_interests WHERE id=?1').bind(data.id).first();
-  return saved?.payload_hash===payloadHash ? { ok:true,id:data.id } : { conflict:true };
+  const saved = await db.prepare('SELECT payload_hash,project,source_domain FROM ragbaz_interests WHERE id=?1').bind(data.id).first();
+  return matches(saved) ? { ok:true,id:data.id } : { conflict:true };
 }
 
 export async function peerContact(request, env, site, body, now = new Date().toISOString()) {
@@ -76,8 +77,10 @@ export async function peerContact(request, env, site, body, now = new Date().toI
   const bucket = site.slug+':'+Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('');
   const window = Math.floor(Date.parse(now)/3600000)*3600;
   const count = await env.PEERS_DB.prepare(`INSERT INTO ragbaz_peer_rate_limits(bucket,window_start,count) VALUES(?1,?2,1)
-    ON CONFLICT(bucket) DO UPDATE SET count=CASE WHEN window_start=excluded.window_start THEN count+1 ELSE 1 END,window_start=excluded.window_start RETURNING count`).bind(bucket,window).first();
-  if (!count || count.count>10) return json({ error:'rate_limited' },429);
+    ON CONFLICT(bucket) DO UPDATE SET count=CASE WHEN window_start=excluded.window_start THEN count+1 ELSE 1 END,window_start=excluded.window_start
+    WHERE ragbaz_peer_rate_limits.window_start<>excluded.window_start OR ragbaz_peer_rate_limits.count<10
+    RETURNING count`).bind(bucket,window).first();
+  if (!count || count.count>10) return new Response(JSON.stringify({error:'rate_limited'}),{status:429,headers:{'Content-Type':'application/json','Cache-Control':'no-store','Retry-After':String(Math.max(1,window+3600-Math.floor(Date.parse(now)/1000)))}});
   const result=await savePeerInterest(env.PEERS_DB,data,site,now);
   if (result.conflict) return json({ error:'request_id_conflict' },409);
   // Never return a peer UUID: a public form must not become an email-existence

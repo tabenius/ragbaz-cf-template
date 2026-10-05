@@ -43,6 +43,17 @@ test('retries are idempotent, changed payload conflicts, and no phantom peer is 
     assert.equal(db.sqlite.prepare('SELECT count(*) n FROM ragbaz_interests').get().n,1);
   }finally{db.sqlite.close();}
 });
+test('request IDs cannot acknowledge a different project or source domain',async()=>{
+  const db=store();try{
+    const data=peerSubmission(body(),request(),base,now);
+    await savePeerInterest(db,data,base,now);
+    for(const site of [{...base,slug:'nostoi'},{...base,origin:'https://other.ragbaz.cc'}]) {
+      assert.equal((await savePeerInterest(db,data,site,now)).conflict,true);
+    }
+    const records=db.sqlite.prepare('SELECT project,source_domain FROM ragbaz_interests').all();
+    assert.deepEqual(records.map(r=>({...r})),[{project:base.slug,source_domain:new URL(base.origin).hostname}]);
+  }finally{db.sqlite.close();}
+});
 test('referrers/UTMs are qualified observations, query strings excluded, privacy signals win',()=>{
   const input=body({attribution_consent:true,referrer:'https://www.google.com/search?q=private+question',utm:{utm_source:'google',utm_campaign:'kind-work',unknown:'never-store'}});
   const data=peerSubmission(input,request(),base,now);
@@ -61,6 +72,20 @@ test('contact response does not expose identity; rate limits use HMAC buckets, n
     assert.ok(!JSON.stringify(db.sqlite.prepare('SELECT * FROM ragbaz_peer_rate_limits').all()).includes('192.0.2.1'));
     for(let i=0;i<9;i++)await peerContact(request({'CF-Connecting-IP':'192.0.2.1'}),env,base,body(),now);
     assert.equal((await peerContact(request({'CF-Connecting-IP':'192.0.2.1'}),env,base,body(),now)).status,429);
+  }finally{db.sqlite.close();}
+});
+test('rate counters saturate after refusal and reset in the next hour',async()=>{
+  const db=store();try{
+    const env={PEERS_DB:db,PEER_HASH_KEY:'test-only-secret'};
+    for(let i=0;i<10;i++) assert.equal((await peerContact(request(),env,base,body(),now)).status,202);
+    for(let i=0;i<5;i++) {
+      const refused=await peerContact(request(),env,base,body(),now);
+      assert.equal(refused.status,429);assert.equal(refused.headers.get('Retry-After'),'3600');
+    }
+    assert.equal(db.sqlite.prepare('SELECT count FROM ragbaz_peer_rate_limits').get().count,10);
+    assert.equal(db.sqlite.prepare('SELECT COUNT(*) AS count FROM ragbaz_interests').get().count,10);
+    assert.equal((await peerContact(request(),env,base,body(),'2026-10-03T13:00:00.000Z')).status,202);
+    assert.equal(db.sqlite.prepare('SELECT count FROM ragbaz_peer_rate_limits').get().count,1);
   }finally{db.sqlite.close();}
 });
 test('future verified-account matches require requested linkage and remain explicitly candidate relations',async()=>{

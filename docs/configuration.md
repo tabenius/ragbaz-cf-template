@@ -116,6 +116,17 @@ to it. Changed or extra approvals fail instead of auto-approving new bytes.
 The private-shaped-text check is a baseline refusal check, not a comprehensive
 secret detector. Keep a private product's exact source allowlist and publisher.
 
+## Illustrative case explorer
+
+An opt-in `modules.demonstration: true` enables a `ragbaz.demonstration/v1`
+configuration containing label, title, description, disclaimer and up to eight
+cases. Each case has a unique slug ID, title, description, conclusion and up to
+twelve plain-text label/value fields. All text is escaped. The first-party
+`demonstration.js` only switches visibility; it performs no requests, command
+execution, policy calculation or authorization. All cases remain readable without
+JavaScript, and print output includes them all. Keep simulated cases explicitly
+labelled; they are not projections of a real application's state.
+
 ## Contact adapter
 
 For a site using the shared `PEERS_DB`, `peerMaintenance: true` explicitly

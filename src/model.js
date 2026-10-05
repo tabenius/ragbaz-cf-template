@@ -79,8 +79,22 @@ export function normalizeSite(input, safeLink) {
   for (const section of site.sections) checkLinks(section.links);
   translations(site.translations, site.locales, safeLink);
   site.modules ??= {};
-  if (Object.keys(site.modules).some(k => !['reader', 'contact', 'publications', 'education'].includes(k)) || Object.values(site.modules).some(v => typeof v !== 'boolean')) throw new Error('Unknown module or non-boolean capability');
+  if (Object.keys(site.modules).some(k => !['reader', 'contact', 'publications', 'education', 'demonstration'].includes(k)) || Object.values(site.modules).some(v => typeof v !== 'boolean')) throw new Error('Unknown module or non-boolean capability');
   if (site.peerMaintenance !== undefined && (typeof site.peerMaintenance !== 'boolean' || (site.peerMaintenance && !site.modules.contact))) throw new Error('Peer maintenance needs an enabled contact module and boolean flag');
+  if (site.modules.demonstration) {
+    const demo = site.demonstration;
+    if (!demo || demo.schema !== 'ragbaz.demonstration/v1') throw new Error('Supply a versioned demonstration');
+    for (const key of ['label', 'title', 'description', 'disclaimer']) requireText(demo[key], 'demonstration ' + key);
+    if (!Array.isArray(demo.cases) || !demo.cases.length || demo.cases.length > 8) throw new Error('Supply bounded demonstration cases');
+    const ids = new Set();
+    for (const item of demo.cases) {
+      if (typeof item.id !== 'string' || !SLUG.test(item.id) || ids.has(item.id)) throw new Error('Invalid demonstration case identity');
+      ids.add(item.id);
+      for (const key of ['title', 'description', 'conclusion']) requireText(item[key], 'demonstration case ' + key);
+      if (!Array.isArray(item.fields) || !item.fields.length || item.fields.length > 12) throw new Error('Supply bounded demonstration fields');
+      for (const field of item.fields) { requireText(field.label, 'demonstration field label'); requireText(field.value, 'demonstration field value'); }
+    }
+  } else if (site.demonstration !== undefined) throw new Error('Enable the demonstration module explicitly');
   site.integrations ??= {};
   for (const [name, config] of Object.entries(site.integrations)) validateIntegration(name, config);
   site.products = (site.products || []).map(publicProduct);

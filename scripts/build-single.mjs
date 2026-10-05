@@ -24,7 +24,7 @@ export async function buildProject(configPath, outputPath) {
   const provenance = JSON.parse(await readFile(join(templateRoot, 'design/provenance.json'), 'utf8'));
   const tokens = await readFile(join(templateRoot, 'assets/tokens.css'));
   if (createHash('sha256').update(tokens).digest('hex') !== provenance.sha256) throw new Error('Vendored token digest mismatch');
-  const assets = ['tokens.css', 'site-tokens.css', 'site.css', 'mark.svg', ...(site.schema === 'ragbaz.project-site/v1' ? ['chrome.js'] : []), ...(site.modules.reader ? ['reader.css', 'reader.js'] : []), ...(site.modules.publications ? ['catalog.js'] : []), ...(site.modules.contact ? ['contact.js'] : []), ...(site.modules.education ? ['education.js'] : [])];
+  const assets = ['tokens.css', 'site-tokens.css', 'site.css', 'mark.svg', ...(site.schema === 'ragbaz.project-site/v1' ? ['chrome.js'] : []), ...(site.modules.reader ? ['reader.css', 'reader.js'] : []), ...(site.modules.publications ? ['catalog.js'] : []), ...(site.modules.contact ? ['contact.js'] : []), ...(site.modules.education ? ['education.js'] : []), ...(site.modules.demonstration ? ['demonstration.js'] : [])];
   for (const asset of assets) await copyFile(join(templateRoot, 'assets', asset), join(output, 'public/assets', asset));
   if (site.socialCard && !site.socialImage) {
     await writeFile(join(output, 'public/assets/social-card.png'), await socialCard(site, new URL('../', import.meta.url)));

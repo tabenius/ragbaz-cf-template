@@ -87,7 +87,7 @@ try {
     await navigate('/sv/');
     assert.equal(await evaluate(`document.documentElement.lang`), 'sv');
   }
-  if (slug === 'nostoi') {
+  if (['nostoi','weftmark'].includes(slug)) {
     await evaluate(`document.querySelector('[data-reader-reset]').click()`);
     for (const width of [1440, 768, 390, 320]) {
       await command('Emulation.setDeviceMetricsOverride', { width, height: 1000, deviceScaleFactor: 1, mobile: false }, sessionId);
@@ -103,6 +103,15 @@ try {
     await evaluate(`document.querySelector('.featured-article').scrollIntoView({behavior:'instant',block:'center'})`);
     const featureShot = await command('Page.captureScreenshot', { format: 'png' }, sessionId);
     await writeFile(join(output, 'browser-feature.png'), Buffer.from(featureShot.data, 'base64'));
+    if (site.modules.demonstration) {
+      await evaluate(`document.querySelector('#demonstration').scrollIntoView({behavior:'instant',block:'center'})`);
+      assert.equal(await evaluate(`document.querySelectorAll('[data-demo-case]:not([hidden])').length`),1);
+      await evaluate(`(() => {const select=document.querySelector('[data-demo-select]');select.value='stale';select.dispatchEvent(new Event('change'));})()`);
+      assert.equal(await evaluate(`document.querySelector('[data-demo-case="stale"]').hidden`),false);
+      assert.equal(await evaluate(`document.querySelector('[data-demo-case="current"]').hidden`),true);
+      const demoShot=await command('Page.captureScreenshot',{format:'png'},sessionId);
+      await writeFile(join(output,'browser-demonstration.png'),Buffer.from(demoShot.data,'base64'));
+    }
     await evaluate(`window.scrollTo({top:0,behavior:'instant'})`);
     await evaluate(`(() => { const select = document.querySelector('[data-reader=theme]'); select.value = 'night'; select.dispatchEvent(new Event('change')); })()`);
     const night = await command('Page.captureScreenshot', { format: 'png' }, sessionId);
@@ -116,7 +125,7 @@ try {
   assert.ok(await evaluate(`document.documentElement.scrollWidth <= window.innerWidth`), 'Mobile layout overflows');
   const shot = await command('Page.captureScreenshot', { format: 'png' }, sessionId);
   await writeFile(join(output, 'browser-mobile.png'), Buffer.from(shot.data, 'base64'));
-  console.log(`${site.name}: Chromium rendering, feature, fleet links, menu keyboard control, preferences, catalog and mobile width passed${slug === 'nostoi' ? '; all four briefs checked at 1440/768/390/320px, with night/print rendering' : ''}`);
+  console.log(`${site.name}: Chromium rendering, feature, fleet links, menu keyboard control, preferences, catalog and mobile width passed; article routes checked at 1440/768/390/320px${site.modules.demonstration ? ', including the illustrative case explorer' : ''}`);
 } finally {
   socket?.close();
   for (const child of [browser, server].filter(Boolean)) {

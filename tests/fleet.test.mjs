@@ -9,7 +9,10 @@ import { approvedDocuments, publicationDigest, verifyApprovals } from '../script
 import { buildProject } from '../scripts/build-single.mjs';
 import { withSecurityHeaders } from '../src/http.js';
 
-const base = JSON.parse(await readFile(new URL('../sites/weftmark/site.json', import.meta.url)));
+const example = JSON.parse(await readFile(new URL('../sites/weftmark/site.json', import.meta.url)));
+// Keep the contract fixture small and stable as real editorial content grows.
+// Optional feature/demo behavior has dedicated tests below.
+const base = { ...example, modules: { ...example.modules, demonstration: false }, demonstration: undefined, featuredPublication: undefined, pages: [example.pages[0]] };
 const get = (url, init) => new Request(url, init);
 const request = (path, init) => get('https://weftmark.ragbaz.cc' + path, init);
 
@@ -88,6 +91,25 @@ test('authenticated adapters retain cookies and force no-store; overlap is refus
 test('peer maintenance is explicit and requires contact to be enabled', () => {
   for(const patch of [{peerMaintenance:'true'},{peerMaintenance:true,modules:{...base.modules,contact:false}}]) assert.throws(()=>validateSite({...base,...patch}),/Peer maintenance/);
   assert.equal(validateSite({...base,peerMaintenance:true}).peerMaintenance,true);
+});
+test('demonstration cases are escaped, visible without scripts, and marked illustrative', async () => {
+  const demo=structuredClone(example.demonstration);
+  demo.cases[0].fields[0].value='<img src=x onerror=alert(1)>';
+  const worker=createSiteWorker({...base,modules:{...base.modules,demonstration:true},demonstration:demo});
+  const html=await (await worker.fetch(request('/'))).text();
+  assert.ok(html.includes('Presentation-only illustrations'));
+  assert.ok(html.includes('&lt;img src=x onerror=alert(1)&gt;'));
+  assert.ok(!html.includes('<img src=x'));
+  assert.equal((html.match(/data-demo-case=/g)||[]).length,4);
+  assert.ok(html.includes('src="/assets/demonstration.js"'));
+  assert.ok(!html.includes('data-demo-case="stale" hidden'));
+});
+test('demonstration data refuses duplicate identities, empty fields and implicit capability', () => {
+  const demo=structuredClone(example.demonstration);
+  const enabled={...base,modules:{...base.modules,demonstration:true}};
+  assert.throws(()=>validateSite({...base,demonstration:demo}),/Enable/);
+  assert.throws(()=>validateSite({...enabled,demonstration:{...demo,cases:[demo.cases[0],demo.cases[0]]}}),/identity/);
+  assert.throws(()=>validateSite({...enabled,demonstration:{...demo,cases:[{...demo.cases[0],fields:[]}]}}),/fields/);
 });
 test('shared header helper supports exact provider origins but refuses CSP injection', () => {
   const policy = { scripts: true, contact: true, scriptOrigins: ['https://challenges.cloudflare.com'], frameOrigins: ['https://challenges.cloudflare.com'] };

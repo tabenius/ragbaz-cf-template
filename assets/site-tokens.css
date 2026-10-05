@@ -24,6 +24,29 @@
   --site-menu-max-height: 80vh; --site-mobile-brand-width: 13rem;
 }
 html[data-project="grove"] { --project-accent: var(--grove); --project-wash: var(--grove-wash); }
+/* One archival layout, two project palettes: Witness and Evidence Register. */
+html:is([data-project="river"],[data-project="loom"]) {
+  --font-display: Georgia, "Times New Roman", serif;
+  --site-radius: .15rem; --site-radius-small: .1rem;
+  --site-hero-size: clamp(4rem,9vw,8rem);
+  --register-ledger-pitch: 2.1rem; --register-grid-pitch: 5.5rem;
+  --register-stitch: color-mix(in srgb, var(--project-accent) 38%, transparent);
+  --register-stitch-run: .55rem; --register-stitch-gap: .4rem;
+  --register-rail: 2px; --register-title-tracking: -.045em;
+  --register-disc-radius: 50%; --register-mask-solid: #000;
+  --register-mask-start: 14%; --register-mask-end: 78%;
+  --register-contents-columns: repeat(2,minmax(0,1fr));
+  --demo-field-columns: minmax(0,1fr) minmax(0,2fr);
+}
+html[data-project="loom"] {
+  --paper-page: #f8f4ee; --paper-inset: #eee6dd; --paper-raise: #fdfaf5;
+  --paper-rule: #d9cfc5; --ink-body: #443b43; --ink-emphasis: #352537;
+  --project-accent: #654568; --project-wash: #eee6ef;
+  --coral: #ddba91; --coral-deep: #775332; --ink-link: #775332;
+  --hero-paper: #2b2030; --hero-muted: #ded2da;
+  --hero-loom-glow: rgba(117,82,126,.26); --hero-grove-glow: rgba(168,126,74,.12);
+  --register-rule: rgba(221,186,145,.07);
+}
 /* Nostoi / Witness Register. Archival paper, marine ink and brass references.
    Palette roles extend the shared web authority; reader.css remains responsible
    for alternate reading themes. Body ornaments use the current reading accent. */
@@ -34,16 +57,6 @@ html[data-project="river"] {
   --coral: #dec398; --coral-deep: #725330; --ink-link: #725330;
   --hero-paper: #102631; --hero-muted: #d2dcd9;
   --hero-loom-glow: rgba(64,105,122,.24); --hero-grove-glow: rgba(135,110,67,.10);
-  --font-display: Georgia, "Times New Roman", serif;
-  --site-radius: .15rem; --site-radius-small: .1rem;
-  --site-hero-size: clamp(4rem,9vw,8rem);
-  --nostoi-ledger-pitch: 2.1rem; --nostoi-grid-pitch: 5.5rem;
-  --nostoi-rule: rgba(222,195,152,.07);
-  --nostoi-stitch: color-mix(in srgb, var(--project-accent) 38%, transparent);
-  --nostoi-stitch-run: .55rem; --nostoi-stitch-gap: .4rem;
-  --nostoi-rail: 2px; --nostoi-title-tracking: -.045em;
-  --nostoi-disc-radius: 50%; --nostoi-mask-solid: #000;
-  --nostoi-mask-start: 14%; --nostoi-mask-end: 78%;
-  --nostoi-contents-columns: repeat(2,minmax(0,1fr));
+  --register-rule: rgba(222,195,152,.07);
 }
 html[data-project="home"] { --project-accent: var(--home); }

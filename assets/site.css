@@ -88,37 +88,44 @@ form input:not([type="checkbox"]), form select, form textarea { display: block; 
 @media (max-width: 48rem) { .hero { grid-template-columns: 1fr; } .hero-emblem { justify-self: center; width: var(--site-logo-size); } .highlights, .featured-article, .quickstart, .interest-panel, .studio-footer, .menu-panel { grid-template-columns: 1fr; } .ecosystem-grid, .workflow ol { grid-template-columns: repeat(2,minmax(var(--site-zero),1fr)); } .featured-article, .interest-panel { padding: var(--space-5); } .menu-panel { max-height: var(--site-menu-max-height); overflow-y: auto; } }
 @media (max-width: 28rem) { .studio-brand small { max-width: var(--site-mobile-brand-width); } .form-grid, .workflow ol, .ecosystem-grid { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-/* Nostoi / Witness Register: measured ornament, archival type and marine ink. */
-html[data-project="river"]:not([data-reader-font]) body { font-family: var(--font-text); }
-html[data-project="river"] .hero { position: relative; border-bottom-color: var(--coral); }
-html[data-project="river"] .hero::before {
+/* Witness / Evidence Register: one layout with project-owned token palettes. */
+html:is([data-project="river"],[data-project="loom"]):not([data-reader-font]) body { font-family: var(--font-text); }
+html:is([data-project="river"],[data-project="loom"]) .hero { position: relative; border-bottom-color: var(--coral); }
+html:is([data-project="river"],[data-project="loom"]) .hero::before {
   content: ""; position: absolute; inset: var(--site-zero); pointer-events: none;
-  background: repeating-linear-gradient(var(--nostoi-rule) var(--site-zero) var(--site-rule), transparent var(--site-rule) var(--nostoi-ledger-pitch)), repeating-linear-gradient(to right,var(--nostoi-rule) var(--site-zero) var(--site-rule),transparent var(--site-rule) var(--nostoi-grid-pitch));
-  mask-image: linear-gradient(to bottom, transparent, var(--nostoi-mask-solid) var(--nostoi-mask-start), var(--nostoi-mask-solid) var(--nostoi-mask-end), transparent);
+  background: repeating-linear-gradient(var(--register-rule) var(--site-zero) var(--site-rule), transparent var(--site-rule) var(--register-ledger-pitch)), repeating-linear-gradient(to right,var(--register-rule) var(--site-zero) var(--site-rule),transparent var(--site-rule) var(--register-grid-pitch));
+  mask-image: linear-gradient(to bottom, transparent, var(--register-mask-solid) var(--register-mask-start), var(--register-mask-solid) var(--register-mask-end), transparent);
 }
-html[data-project="river"] .hero h1 { letter-spacing: var(--nostoi-title-tracking); }
-html[data-project="river"] .hero .deck { color: var(--hero-ink); }
-html[data-project="river"] .hero-emblem img { border-radius: var(--nostoi-disc-radius); border: var(--site-rule) solid var(--coral); }
-html[data-project="river"] .hero .button.primary { color: var(--hero-paper); }
-html[data-project="river"] .section-number { border: var(--site-zero); padding: var(--site-zero); margin-inline-end: var(--space-3); color: var(--project-accent); }
-html[data-project="river"] .prose-section h2 { position: relative; padding-bottom: var(--space-4); }
-html[data-project="river"] .prose-section h2::after {
+html:is([data-project="river"],[data-project="loom"]) .hero h1 { letter-spacing: var(--register-title-tracking); }
+html:is([data-project="river"],[data-project="loom"]) .hero .deck { color: var(--hero-ink); }
+html:is([data-project="river"],[data-project="loom"]) .hero-emblem img { border-radius: var(--register-disc-radius); border: var(--site-rule) solid var(--coral); }
+html:is([data-project="river"],[data-project="loom"]) .hero .button.primary { color: var(--hero-paper); }
+html:is([data-project="river"],[data-project="loom"]) .section-number { border: var(--site-zero); padding: var(--site-zero); margin-inline-end: var(--space-3); color: var(--project-accent); }
+html:is([data-project="river"],[data-project="loom"]) .prose-section h2 { position: relative; padding-bottom: var(--space-4); }
+html:is([data-project="river"],[data-project="loom"]) .prose-section h2::after {
   content: ""; position: absolute; inset-inline: var(--site-zero); bottom: var(--site-zero); height: var(--site-rule);
-  background: repeating-linear-gradient(to right, var(--nostoi-stitch) var(--site-zero) var(--nostoi-stitch-run), transparent var(--nostoi-stitch-run) calc(var(--nostoi-stitch-run) + var(--nostoi-stitch-gap)));
+  background: repeating-linear-gradient(to right, var(--register-stitch) var(--site-zero) var(--register-stitch-run), transparent var(--register-stitch-run) calc(var(--register-stitch-run) + var(--register-stitch-gap)));
 }
-html[data-project="river"] .highlights article, html[data-project="river"] .publication-card {
-  border: var(--site-zero); border-inline-start: var(--nostoi-rail) solid var(--project-accent);
+html:is([data-project="river"],[data-project="loom"]) .highlights article, html:is([data-project="river"],[data-project="loom"]) .publication-card {
+  border: var(--site-zero); border-inline-start: var(--register-rail) solid var(--project-accent);
   border-radius: var(--site-zero); padding-inline-start: var(--space-5);
 }
-html[data-project="river"] .contents { display: grid; grid-template-columns: var(--nostoi-contents-columns); }
-html[data-project="river"] .text-links { font-family: var(--reader-font-sans); font-size: var(--type--1); }
-html[data-project="river"] pre {
-  border-inline-start: var(--nostoi-rail) solid var(--project-accent);
+html:is([data-project="river"],[data-project="loom"]) .contents { display: grid; grid-template-columns: var(--register-contents-columns); }
+html:is([data-project="river"],[data-project="loom"]) .text-links { font-family: var(--reader-font-sans); font-size: var(--type--1); }
+html:is([data-project="river"],[data-project="loom"]) pre {
+  border-inline-start: var(--register-rail) solid var(--project-accent);
   border-radius: var(--site-zero); background: var(--paper-raise);
 }
-html[data-project="river"] .thread { color: var(--nostoi-stitch); }
+html:is([data-project="river"],[data-project="loom"]) .thread { color: var(--register-stitch); }
+.demonstration { padding: var(--space-7); margin-block: var(--space-7); background: var(--paper-inset); border-top: var(--site-focus) solid var(--project-accent); }
+.demonstration select { margin-block: var(--space-3); max-width: var(--site-full); }
+.demonstration article { padding-block: var(--space-4); }
+.demonstration dl > div { display: grid; grid-template-columns: var(--demo-field-columns, var(--site-full)); gap: var(--space-4); padding-block: var(--space-3); border-top: var(--site-rule) solid var(--paper-rule); }
+.demonstration dt { font-family: var(--reader-font-sans); color: var(--ink-muted); }
+.demonstration dd { margin: var(--site-zero); font-family: var(--font-mono); font-size: var(--type--1); overflow-wrap: anywhere; }
+.demo-conclusion { border-inline-start: var(--site-focus) solid var(--project-accent); padding-inline-start: var(--space-4); }
 .local-feature .article-art img { display: block; width: var(--site-full); height: auto; }
 .local-feature:not(:has(.article-art)) { grid-template-columns: var(--site-full); }
-@media (max-width: 28rem) { html[data-project="river"] .contents { grid-template-columns: var(--site-full); } }
-@media print { html[data-project="river"] .hero::before, html[data-project="river"] .prose-section h2::after { display: none; } }
+@media (max-width: 28rem) { html:is([data-project="river"],[data-project="loom"]) .contents, .demonstration dl > div { grid-template-columns: var(--site-full); } .demonstration { padding: var(--space-4); } }
+@media print { html:is([data-project="river"],[data-project="loom"]) .hero::before, html:is([data-project="river"],[data-project="loom"]) .prose-section h2::after { display: none; } [data-demo-controls] { display: none; } .demonstration article[hidden] { display: block; } }
 @media print { .site-header, .reading-toolbar, .interest-panel, .main-menu, .actions, .skip { display: none; } .hero { background: var(--paper-page); color: var(--ink-body); display: block; padding-block: var(--space-5); } .hero h1, .hero .deck, .hero p { color: var(--ink-emphasis); } .hero-emblem { display: none; } }

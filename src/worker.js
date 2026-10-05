@@ -3,6 +3,7 @@ import { homePage, mounted, pagePath, availableLocales, edition, publications } 
 import { json, view, withSecurityHeaders } from './http.js';
 import { contactRequest } from './contact.js';
 import { integrationAdapters } from './integrations.js';
+import { maintainPeers } from './peers.js';
 export { withSecurityHeaders } from './http.js';
 
 export function createSiteWorker(config, { adapters = [], assetManifest = null, release = null } = {}) {
@@ -16,6 +17,7 @@ export function createSiteWorker(config, { adapters = [], assetManifest = null, 
   const missing = renderPage(site, { missing: true });
   const projection = page => ({ id: page.id, path: pagePath(site, page), title: page.title, description: page.description, kind: page.kind, status: page.status, created: page.created, published: page.published, updated: page.updated, tags: page.tags, locales: availableLocales(site, page).map(l => l.code), editions: Object.fromEntries(availableLocales(site, page).map(l => [l.code, { title: edition(site, page, l.code).title, description: edition(site, page, l.code).description, url: site.origin + pagePath(site, page, l.code) }])) });
   return {
+    async scheduled(event,env,ctx) { ctx.waitUntil(maintainPeers(env)); },
     async fetch(request, env = {}, ctx) {
       const url = new URL(request.url);
       const finish = (response, policy = {}) => withSecurityHeaders(response, request, policy);
@@ -57,7 +59,7 @@ export function createSiteWorker(config, { adapters = [], assetManifest = null, 
         } catch { return finish(new Response('Assets unavailable\n', { status: 503, headers: { 'Cache-Control': 'no-store' } })); }
       }
       if (route === '/publications/' && site.modules.publications) return html(renderPage(site, { listing: true }));
-      if (route === '/contact/' && site.modules.contact) return html(renderPage(site, { contact: true }));
+      if (route === '/contact/' && site.modules.contact) return html(renderPage(site, { contact: true,sent:url.searchParams.get('sent')==='1' }));
       if (!route.endsWith('/') && (site.pages.some(p => p.path === route + '/' && p.status !== 'draft') || (route === '/publications' && site.modules.publications) || (route === '/contact' && site.modules.contact))) return finish(new Response(null, { status: 308, headers: { Location: mounted(site, route + '/') + url.search } }));
       let locale = site.defaultLocale, pageRoute = route;
       const first = route.split('/')[1];

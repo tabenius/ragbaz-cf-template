@@ -13,5 +13,21 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - name: Artifact exchange invariants
+        run: node --test extensions/artifacts/tests/*.test.mjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Portable artifact schemas
+        run: |
+          python -m venv "$RUNNER_TEMP/artifact-schema-env"
+          "$RUNNER_TEMP/artifact-schema-env/bin/python" -m pip install 'jsonschema==4.25.1'
+          "$RUNNER_TEMP/artifact-schema-env/bin/python" extensions/artifacts/tests/schema_check.py
       - run: npm run bundle
       - run: npm run smoke
+      - name: Fleet and Nostoi browser checks
+        run: |
+          npm run smoke:browser
+          npm run smoke:browser -- nostoi
+        env:
+          CHROMIUM: google-chrome

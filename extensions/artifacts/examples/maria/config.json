@@ -1,0 +1,84 @@
+{
+  "schema": "ragbaz.artifact-site/v1",
+  "source": "inline",
+  "site": {
+    "schema": "ragbaz.project-site/v1",
+    "slug": "maria-gifts",
+    "name": "For Marija, with gratitude",
+    "origin": "https://gifts.ragbaz.cc",
+    "tagline": "Something beautiful to keep. Something useful to carry forward.",
+    "description": "An initial collection of thoughtful gifts for Marija Cvijovic, beginning with a keepsake about her name.",
+    "status": "Local gift initiative; technical companions are proposed, not delivered.",
+    "updated": "2026-10-05",
+    "links": [{ "label": "The RAGBAZ workshop", "href": "https://ragbaz.cc" }],
+    "sections": [{ "id": "intention", "title": "A little care returned", "paragraphs": ["This first collection holds a name keepsake. Useful research-software gifts can be added when completed and checked."] }],
+    "modules": { "reader": false, "publications": false, "contact": false }
+  },
+  "collections": [{
+    "id": "maria", "path": "/", "mode": "collection", "theme": "hearth",
+    "title": "For Marija. With gratitude.",
+    "ingress": "A name held dear, a kindness remembered, and the beginning of a collection. Small, carefully made gifts for Maria and, in time, useful companions for her colleagues."
+  }],
+  "permissions": {
+    "maria-name": { "scopes": ["artifact"], "reference": "Author-requested name gift from Tobias's initiative; no quote, photograph or opinion attributed to Maria." }
+  },
+  "inline": {
+    "maria": [{
+      "schema": "ragbaz.artifact/v1", "id": "maria-name", "kind": "gift",
+      "title": "Marija · A name held dear",
+      "ingress": "Some words travel through centuries. Some kindnesses travel through a life. A warm illustrated keepsake about the name Marija, the generous breadth of being beloved, and gratitude made tangible.",
+      "presentation": "card", "created_at": "2026-10-05T00:00:00Z",
+      "image": { "src": "/assets/name-window.svg", "alt": "A golden sun above terracotta fields and green leaves, framed by an ivory arch." },
+      "social_image": { "src": "/assets/maria-name-og.png", "alt": "Marija · A name held dear — an illustrated gift of gratitude." },
+      "resources": [
+        { "type": "external", "url": "https://www.behindthename.com/name/marija", "media_type": "text/html", "label": "Read about the modern name forms" },
+        { "type": "external", "url": "https://www.behindthename.com/name/mary", "media_type": "text/html", "label": "Explore the history and competing etymologies" },
+        { "type": "external", "url": "https://en.wiktionary.org/wiki/mrj#Egyptian", "media_type": "text/html", "label": "The Egyptian word and its recorded meanings" }
+      ],
+      "body": [
+        { "id": "dedication", "title": "For help that mattered. For kindness remembered.", "paragraphs": [
+          "Dear Maria, a thank-you can be a sentence. It can also become a carefully made page, a useful tool, a little less work on an ordinary day. This is the first of those things: a small celebration of your name, offered in a spirit of affectionate gratitude.",
+          "One proposed ancient interpretation is ‘beloved.’ Here, that means cherished and appreciated. The history is uncertain; the intention of this gift is simple."
+        ] },
+        { "id": "history", "title": "Many voices. One family of names.", "paragraphs": [
+          "Marija belongs to the great family of Maria, Mary, Mariam, and Miriam: names carried across languages, borders, households, and generations. Marija is used in Serbian and several other languages. Its familiar relative Maria reaches us through Greek and Latin forms of the Hebrew Miryam.",
+          "There is something lovely in that continuity. A name can remain recognizable while acquiring the sound of each place that welcomes it. Marija and Maria are neighboring forms within a much-traveled family.",
+          "The earliest meaning is not settled. Proposed explanations include connections with bitterness, rebelliousness, and an Egyptian word-family associated with love. The Egyptian proposal is the source of the interpretation ‘beloved’: a beautiful possibility, not a translation we can establish with certainty."
+        ] },
+        { "id": "beloved", "title": "Beloved. But beloved in what way?", "paragraphs": [
+          "The most careful answer is spacious: loved, cherished, held dear—with the kind of relationship left unspecified. The name does not, by itself, choose a lover, a family, a friend, or a faith.",
+          "The Egyptian verb commonly transliterated mrj or mri̯ has a broad range: to love, have affection for, be fond of; in some contexts, to want or desire. Recorded uses include family affection, relationships between people and gods, and love for truth, life, or goodness. An inscription speaks of a ‘beloved son.’ This is not a word reserved for romance.",
+          "Nothing in the name specifies marriage, erotic desire, exclusivity, or lifelong partnership. Nor does it establish that its bearer is loved by a particular deity. Those meanings require further context."
+        ] },
+        { "id": "family-friendship", "title": "The many rooms of affection", "paragraphs": [
+          "Family: the tenderness of belonging. Parents and children, siblings, the people who know the old stories—‘beloved’ can live comfortably here. Familial use is directly attested in the Egyptian word's range.",
+          "Friendship: the pleasure of another mind. Trust, conversation, companionship, esteem give affection their own shape. A broad word for fondness is compatible with this reading, although the name itself does not specifically mean ‘friend.’",
+          "Gratitude: goodness that keeps unfolding. Sometimes we cherish someone because their help continues to bear fruit. A patient explanation, an opening, encouragement at the right time: these can become reasons for affectionate gratitude. This is a personal application, not a literal meaning of ‘teacher’ or ‘benefactor.’"
+        ] },
+        { "id": "spirit-partnership", "title": "Reverence, romance, and an open meaning", "paragraphs": [
+          "Spiritual affection: a word with room for reverence. Egyptian usage includes relationships between people and gods. A modern name alone tells us neither its bearer's beliefs nor who is doing the loving.",
+          "Romance: a possible context, not a promise. ‘Beloved’ can address a romantic partner, but the name does not encode sexual attraction, marriage, permanence, or mutual commitment. Those belong to a particular relationship.",
+          "Unspecified care: held dear, full stop. Without added context, this is the most careful reading. Affection can be real without being forced into a narrower category. The Greek terms eros, philia, storgē, and agapē are not exact lexical divisions built into the Egyptian word."
+        ] },
+        { "id": "reception", "title": "A little beauty. A little more breathing room.", "paragraphs": [
+          "Imagine a small envelope among the ordinary messages of a working day. Inside: a page about a name, and perhaps, in time, something useful beside it. A gentle interruption. A thank-you with a practical shape.",
+          "An unsigned gift can feel delightful, curious, or simply unexpected. There is no single reaction it ought to produce. This page leaves that experience to you. Its affection is appreciation; its ambition is usefulness.",
+          "This page does not ask you to solve the mystery of its sender or find the perfect words in return. You may enjoy it, keep it, share it, or simply let it pass through your day. With gratitude."
+        ] },
+        { "id": "companions", "title": "When gratitude becomes something useful", "paragraphs": [
+          "A result that runs: one figure, one documented command, a clear path from input to output. A gentler beginning: a checked quick-start for a new colleague. A little time returned: a measured improvement to a slow or brittle workflow.",
+          "These are ideas for later contributions, not completed technical gifts. This first collection holds the name keepsake itself."
+        ] },
+        { "id": "reading-notes", "title": "Where history ends and interpretation begins", "paragraphs": [
+          "Behind the Name's Mary and Marija entries document the name family and discuss competing etymologies. The accessible Egyptian mrj entry in Wiktionary records the semantic range and cites standard Egyptological dictionaries. Those dictionary citations are reported through the entry, not independently verified here.",
+          "The specialist Thesaurus Linguae Aegyptiae, lemma 72470, required access verification when consulted. ‘Star of the sea’ is a later Marian title, not an established original Hebrew meaning. ‘Wished-for child’ is another traditional proposed explanation, not a settled translation.",
+          "The landscape and rooms of affection are original poetic imagery, not biographical claims. No personality, religion, nationality, or relationship is inferred from a name. Reference pages consulted: 5 October 2026."
+        ] },
+        { "id": "closing", "title": "The history leaves a question. The thank-you leaves a flower.", "paragraphs": [
+          "Perhaps ‘beloved’ belongs somewhere in the ancient beginnings of your name. Perhaps its earliest story is another one. Either way, there is room here for a simpler truth: kindness can be remembered, and gratitude can be made into something beautiful.",
+          "For Marija. For Maria. With care."
+        ] }
+      ]
+    }]
+  }
+}

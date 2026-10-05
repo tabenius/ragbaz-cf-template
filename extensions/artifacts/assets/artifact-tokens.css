@@ -1,0 +1,27 @@
+/* Extension layout tokens. Shared paper/ink roles inherit the template's
+   authority; Hearthlight is a scoped domestic-print edition of those roles. */
+:root {
+  --artifact-width: 74rem; --artifact-text: 44rem; --artifact-gutter: clamp(1.4rem,5vw,4.5rem);
+  --artifact-gap: 1.6rem; --artifact-pad: 2rem; --artifact-small-pad: 1rem;
+  --artifact-section-pad: clamp(2rem,5vw,4rem); --artifact-heading: clamp(2.8rem,7vw,5.7rem);
+  --artifact-subheading: clamp(1.7rem,3.6vw,2.6rem); --artifact-card-title: 1.8rem;
+  --artifact-body: 1.1rem; --artifact-label: .7rem; --artifact-rule: 1px;
+  --artifact-border-thick: 3px; --artifact-tracking: .14em; --artifact-leading: 1.7;
+  --artifact-tight: 1.12; --artifact-zero: 0; --artifact-full: 100%; --artifact-half: 50%;
+  --artifact-margin: 2rem; --artifact-thumb-ratio: 16 / 10; --artifact-cover-height: 16rem;
+  --artifact-photo: 3.5rem; --artifact-flower: 4rem; --artifact-ribbon-height: 1rem;
+  --artifact-weight: 700; --artifact-motif-height: 8rem; --artifact-input-height: 3rem;
+  --artifact-grid: repeat(auto-fit,minmax(min(100%,19rem),1fr)); --artifact-single: 1fr;
+  --artifact-welcome-grid: auto 1fr; --artifact-focus: 3px; --artifact-offset: 4px;
+  --artifact-serif: Georgia,'Times New Roman',serif; --artifact-sans: system-ui,sans-serif;
+  --artifact-shadow: 0 1rem 3rem #493b2520; --artifact-outer: var(--paper-inset);
+  --artifact-print-margin: 18mm; --artifact-print-heading: 32pt;
+  --artifact-skip-offset: -200%;
+}
+html[data-artifact-theme="hearth"] {
+  --paper-page: #f3ead8; --paper-inset: #e5d9c3; --paper-raise: #fbf6ea;
+  --paper-rule: #b5ad94; --ink-body: #283e33; --ink-emphasis: #283e33;
+  --ink-muted: #5f6557; --ink-link: #934831; --project-accent: #934831;
+  --project-wash: #d9ddc9; --focus-ring: #934831;
+}
+@media (max-width: 40rem) { :root { --artifact-margin: 0; --artifact-cover-height: 12rem; } }

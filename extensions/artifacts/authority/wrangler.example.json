@@ -1,0 +1,14 @@
+{
+  "$schema": "../../../node_modules/wrangler/config-schema.json",
+  "name": "ragbaz-artifact-exchange-example",
+  "main": "example-worker.js",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": false,
+  "vars": { "PUBLIC_INTAKE": "false" },
+  "d1_databases": [{
+    "binding": "EXCHANGE_DB",
+    "database_name": "ragbaz-artifact-exchange-example",
+    "database_id": "00000000-0000-0000-0000-000000000000"
+  }],
+  "services": [{ "binding": "EXCHANGE_IDENTITY", "service": "ragbaz-identity-contract-adapter" }]
+}

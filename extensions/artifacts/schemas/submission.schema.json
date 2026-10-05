@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ragbaz:artifact-submission:v1",
+  "title": "Private, direction-neutral sharing envelope",
+  "type": "object", "additionalProperties": false,
+  "required": ["schema", "collection", "direction", "artifact"],
+  "properties": {
+    "schema": { "const": "ragbaz.artifact-submission/v1" },
+    "collection": { "$ref": "urn:ragbaz:artifact:v1#/$defs/id" },
+    "direction": { "enum": ["inbound", "outbound"] },
+    "artifact": { "$ref": "urn:ragbaz:artifact:v1" },
+    "sender": { "$ref": "#/$defs/contact" },
+    "recipient": { "$ref": "#/$defs/contact" },
+    "in_reply_to": { "$ref": "urn:ragbaz:artifact:v1#/$defs/id" },
+    "source": {
+      "type": "object", "additionalProperties": false, "required": ["system", "reference"],
+      "properties": {
+        "system": { "$ref": "urn:ragbaz:artifact:v1#/$defs/id" },
+        "reference": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "person_reference": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "observed_at": { "type": "string", "format": "date-time" }
+      },
+      "description": "Private source/correlation provenance; not verified identity and never part of the public descriptor."
+    },
+    "permission": {
+      "type": "object", "additionalProperties": false, "required": ["offered_scopes"],
+      "properties": {
+        "offered_scopes": { "type": "array", "items": { "enum": ["artifact", "quote", "name", "photo", "profile"] } },
+        "note": { "type": "string", "minLength": 1, "maxLength": 4000 }
+      },
+      "description": "A permission offer, not editorial approval or verified identity. Evidence is recorded separately for this immutable content."
+    }
+  },
+  "$defs": {
+    "contact": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "email": { "type": "string", "format": "email", "maxLength": 254 },
+        "profile_url": { "$ref": "urn:ragbaz:artifact:v1#/$defs/https" },
+        "photo_source_url": { "$ref": "urn:ragbaz:artifact:v1#/$defs/https" }
+      },
+      "description": "Private correspondence metadata; never projected onto public cards."
+    }
+  }
+}

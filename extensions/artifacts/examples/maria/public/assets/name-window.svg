@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">A little landscape of welcome</title>
+  <desc id="desc">Original domestic-print illustration: sun, fields, and leaves in an ivory arch.</desc>
+  <rect width="1200" height="630" fill="#e5d9c3"/>
+  <path d="M380 585V248a220 220 0 0 1 440 0v337Z" fill="#f3ead8" stroke="#283e33" stroke-width="3"/>
+  <defs><clipPath id="arch"><path d="M405 560V248a195 195 0 0 1 390 0v312Z"/></clipPath></defs>
+  <g clip-path="url(#arch)">
+    <rect x="405" y="45" width="390" height="515" fill="#fbf6ea"/>
+    <circle cx="600" cy="242" r="88" fill="#c59949"/>
+    <g stroke="#934831" stroke-width="2"><path d="M600 117V86m-68 53-17-29m-35 77-28-17m216-31 17-29m35 77 28-17"/></g>
+    <path d="M380 420q142-140 260-47t187-25v230H380Z" fill="#a2ad88"/>
+    <path d="M380 475q150-120 290-38t157-16v157H380Z" fill="#934831"/>
+    <g fill="none" stroke="#f3ead8" stroke-width="3"><path d="M375 498q150-120 290-38t160-16M375 525q150-120 290-38t160-16M375 552q150-120 290-38t160-16M375 579q150-120 290-38t160-16"/></g>
+    <g fill="#283e33" stroke="#283e33" stroke-width="4"><path d="M433 468V329m0 85c-48-7-42-50-42-50 44 2 42 50 42 50Zm0-34c51-3 45-53 45-53-45 3-45 53-45 53ZM772 499V370m0 80c-46-7-41-46-41-46 40 1 41 46 41 46Zm0-32c47-2 43-49 43-49-41 1-43 49-43 49Z"/></g>
+  </g>
+  <path d="M405 560V248a195 195 0 0 1 390 0v312Z" fill="none" stroke="#283e33" stroke-width="3"/>
+  <path d="M365 601h470M465 615h270" stroke="#283e33" stroke-width="3"/>
+  <g fill="#934831"><circle cx="250" cy="300" r="4"/><circle cx="950" cy="300" r="4"/></g>
+</svg>

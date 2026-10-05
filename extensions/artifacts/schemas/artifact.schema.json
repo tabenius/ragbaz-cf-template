@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ragbaz:artifact:v1",
+  "title": "A reusable public artifact descriptor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "id", "kind", "title", "ingress", "created_at", "resources"],
+  "properties": {
+    "schema": { "const": "ragbaz.artifact/v1" },
+    "id": { "$ref": "#/$defs/id" },
+    "kind": { "$ref": "#/$defs/id", "description": "Semantic purpose: gift, quote, document, software, reply, or another stable kind." },
+    "title": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "ingress": { "type": "string", "minLength": 1, "maxLength": 1200 },
+    "quote": { "type": "string", "minLength": 1, "maxLength": 3000 },
+    "person": { "$ref": "#/$defs/person" },
+    "image": { "$ref": "#/$defs/image" },
+    "social_image": { "$ref": "#/$defs/rasterImage" },
+    "presentation": { "enum": ["card", "thumbnail", "quote", "box", "og"], "default": "card" },
+    "created_at": { "type": "string", "format": "date-time", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{3})?Z$" },
+    "resources": { "type": "array", "maxItems": 12, "items": { "$ref": "#/$defs/resource" } },
+    "body": { "type": "array", "maxItems": 30, "items": { "$ref": "#/$defs/section" } },
+    "tags": { "type": "array", "maxItems": 20, "items": { "type": "string", "minLength": 1, "maxLength": 80 } },
+    "relations": { "type": "array", "maxItems": 12, "items": { "type": "object", "additionalProperties": false, "required": ["kind", "artifact_id"], "properties": { "kind": { "$ref": "#/$defs/id" }, "artifact_id": { "$ref": "#/$defs/id" } } } }
+  },
+  "dependentRequired": { "quote": ["person"] },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,79}$" },
+    "https": { "type": "string", "format": "uri", "pattern": "^https://", "maxLength": 2048 },
+    "local": { "type": "string", "pattern": "^/(?!/)(?!.*\\.\\.)[a-zA-Z0-9/_.,~-]*$" },
+    "image": { "type": "object", "additionalProperties": false, "required": ["src", "alt"], "properties": { "src": { "type": "string", "pattern": "^/assets/(?!.*\\.\\.)[a-zA-Z0-9/_.,~-]+\\.(png|jpe?g|webp|gif|svg)$" }, "alt": { "type": "string", "minLength": 1, "maxLength": 300 } } },
+    "rasterImage": { "allOf": [{ "$ref": "#/$defs/image" }, { "properties": { "src": { "pattern": "\\.(png|jpe?g|webp|gif)$" } } }] },
+    "person": {
+      "type": "object", "additionalProperties": false, "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "role": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "profile_url": { "$ref": "#/$defs/https" },
+        "identity_urls": { "type": "array", "maxItems": 8, "items": { "$ref": "#/$defs/https" } },
+        "photo": { "$ref": "#/$defs/image" }
+      }
+    },
+    "resource": {
+      "type": "object", "additionalProperties": false, "required": ["type"],
+      "properties": {
+        "type": { "enum": ["local", "external", "mouseion", "oci"] },
+        "url": { "oneOf": [{ "$ref": "#/$defs/https" }, { "$ref": "#/$defs/local" }] },
+        "identifier": { "type": "string", "minLength": 1, "maxLength": 1024 },
+        "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "media_type": { "type": "string", "pattern": "^[a-z0-9][a-z0-9!#$&^_.+-]*/[a-z0-9][a-z0-9!#$&^_.+-]*$" },
+        "bytes": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        "label": { "type": "string", "minLength": 1, "maxLength": 200 }
+      },
+      "allOf": [
+        { "if": { "properties": { "type": { "const": "local" } } }, "then": { "required": ["url"], "properties": { "url": { "$ref": "#/$defs/local" } } } },
+        { "if": { "properties": { "type": { "const": "external" } } }, "then": { "required": ["url"], "properties": { "url": { "$ref": "#/$defs/https" } } } },
+        { "if": { "properties": { "type": { "enum": ["mouseion", "oci"] } } }, "then": { "required": ["identifier"], "properties": { "url": { "$ref": "#/$defs/https" } } } },
+        { "if": { "properties": { "type": { "const": "oci" } } }, "then": { "required": ["digest"] } }
+      ]
+    },
+    "section": {
+      "type": "object", "additionalProperties": false, "required": ["id", "title", "paragraphs"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" }, "title": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "paragraphs": { "type": "array", "minItems": 1, "maxItems": 30, "items": { "type": "string", "minLength": 1, "maxLength": 8000 } }
+      }
+    }
+  }
+}

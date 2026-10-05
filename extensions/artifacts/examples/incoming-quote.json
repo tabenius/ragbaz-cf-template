@@ -1,0 +1,23 @@
+{
+  "schema": "ragbaz.artifact-submission/v1",
+  "collection": "maria",
+  "direction": "inbound",
+  "artifact": {
+    "schema": "ragbaz.artifact/v1",
+    "id": "replace-with-a-unique-id",
+    "kind": "quote",
+    "title": "Replace with an agreed title",
+    "quote": "Replace with the peer's exact words; this is a template, not a testimonial.",
+    "ingress": "Replace with the context in which the opinion or gift was shared.",
+    "person": {
+      "name": "The peer's chosen public name",
+      "role": "Their agreed public description",
+      "profile_url": "https://example.org/agreed-profile"
+    },
+    "presentation": "quote",
+    "created_at": "2026-10-05T00:00:00Z",
+    "resources": [{ "type": "external", "url": "https://example.org/shared-artifact", "media_type": "text/html" }]
+  },
+  "sender": { "name": "Private correspondence name", "email": "replace@example.org", "photo_source_url": "https://example.org/portrait-source.jpg" },
+  "permission": { "offered_scopes": [], "note": "Collect actual permission; this template grants none." }
+}

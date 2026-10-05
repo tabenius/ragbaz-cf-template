@@ -1,0 +1,19 @@
+/* Scoped card slots: an ordinary project page keeps its existing chrome/theme. */
+.artifact-embedded { padding-block: var(--artifact-section-pad); }
+.artifact-embedded .artifact-grid { display: grid; grid-template-columns: var(--artifact-grid); gap: var(--artifact-gap); }
+.artifact-embedded .artifact-card { min-width: var(--artifact-zero); border: var(--artifact-rule) solid var(--paper-rule); background: var(--paper-raise); }
+.artifact-embedded .artifact-cover { display: block; }
+.artifact-embedded .artifact-cover img { display: block; width: var(--artifact-full); height: var(--artifact-cover-height); object-fit: cover; }
+.artifact-embedded .artifact-card-copy { padding: var(--artifact-pad); }
+.artifact-embedded .artifact-card h2 { font-size: var(--artifact-card-title); }
+.artifact-embedded .artifact-kicker { color: var(--project-accent); font: var(--artifact-label)/var(--artifact-leading) var(--artifact-sans); text-transform: uppercase; letter-spacing: var(--artifact-tracking); }
+.artifact-embedded .artifact-motif { height: var(--artifact-motif-height); display: grid; place-items: center; background: var(--project-wash); color: var(--project-accent); font-size: var(--artifact-flower); }
+.artifact-embedded .artifact-byline { display: flex; align-items: center; gap: var(--artifact-small-pad); margin-block: var(--artifact-pad); }
+.artifact-embedded .artifact-byline strong,.artifact-embedded .artifact-byline > span > span { display: block; }
+.artifact-embedded .artifact-byline img,.artifact-embedded .artifact-initials { width: var(--artifact-photo); height: var(--artifact-photo); object-fit: cover; border-radius: var(--artifact-half); }
+.artifact-embedded .artifact-initials { display: grid; place-items: center; background: var(--project-wash); }
+.artifact-embedded .artifact-box { background: var(--project-wash); }
+.artifact-embedded .artifact-quote { border-top: var(--artifact-border-thick) solid var(--project-accent); }
+.artifact-embedded .artifact-og { box-shadow: var(--artifact-shadow); }
+.artifact-embedded .artifact-thumbnail .artifact-cover img { height: var(--artifact-motif-height); }
+.artifact-embedded .artifact-card blockquote { margin: var(--artifact-pad) var(--artifact-zero); font-size: var(--site-deck-size); font-style: italic; }

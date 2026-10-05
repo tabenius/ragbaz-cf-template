@@ -1,23 +1,28 @@
-/* Website-specific layout roles. Shared palette/type/space come from tokens.css. */
+/* Editorial extension, derived from DocBin's The Loom and the Grove.
+   Core book tokens remain vendored in tokens.css; all new roles live here. */
 :root {
-  --site-width: 72rem;
-  --site-hero-size: clamp(2.488rem, 7vw, 5rem);
-  --site-rule: 1px;
-  --site-focus: 3px;
-  --site-focus-offset: 3px;
-  --site-weight-bold: 700;
-  --site-zero: 0;
-  --site-full: 100%;
-  --site-tracking: 0.08em;
-  --reader-font-sans: system-ui, sans-serif;
-  --reader-sepia-paper: #f7f2e7; /* fleet paper-inset */
-  --reader-night-paper: #17150f; /* fleet ink-emphasis */
-  --reader-night-inset: #2b2822; /* fleet ink-body */
-  --reader-night-rule: #6d6659; /* fleet ink-muted */
-  --reader-night-ink: #f6f2e9; /* fleet ink-invert */
-  --reader-night-muted: #ded5c2; /* fleet paper-rule */
-  --reader-night-link: #f3c46c; /* www.ragbaz orange-1 */
-  --site-card-min: 18rem;
-  --site-print-a4-margin: 18mm;
-  --site-print-a5-margin: 12mm;
+  --paper-page: #fbf8ef; --paper-inset: #f4eede; --paper-raise: #fffdf6;
+  --paper-rule: #e3dccc; --ink-body: #3a4149; --ink-emphasis: #1a1f24; --ink-muted: #6a6357;
+  --coral: #e8532e; --coral-deep: #c33d1c; --loom: #4b46b8; --grove: #2f7d52;
+  --loom-wash: #eae9f7; --grove-wash: #e7f1ea; --river: #2f6f95; --home: #96672e;
+  --hero-paper: #10161b; --hero-ink: #fcf8f0; --hero-muted: #d7ccbb;
+  --hero-loom-glow: rgba(75,70,184,.28); --hero-grove-glow: rgba(47,125,82,.23);
+  --ink-link: var(--coral-deep); --focus-ring: var(--coral);
+  --project-accent: var(--loom); --project-wash: var(--loom-wash);
+  --site-width: 76rem; --site-text-width: 44rem; --site-gutter: clamp(1.2rem,4vw,3rem);
+  --site-hero-size: clamp(3rem,7.4vw,6rem); --site-deck-size: clamp(1.3rem,2.5vw,1.85rem);
+  --site-section-size: clamp(1.7rem,3.6vw,2.8rem); --site-body-size: clamp(1rem,1.2vw,1.13rem);
+  --site-rule: 1px; --site-focus: 3px; --site-focus-offset: 3px; --site-weight-bold: 700;
+  --site-zero: 0; --site-full: 100%; --site-tracking: .11em; --site-card-min: 18rem;
+  --site-radius: 1rem; --site-radius-small: .45rem; --site-logo-size: clamp(9rem,18vw,15rem);
+  --site-mark-size: 2.6rem; --site-menu-width: 58rem; --site-menu-layer: 20;
+  --site-shadow: 0 1rem 3rem rgba(16,22,27,.15); --site-hero-pad: clamp(3rem,7vw,6rem);
+  --reader-font-sans: system-ui,-apple-system,"Segoe UI",sans-serif;
+  --reader-sepia-paper: #f4eede; --reader-night-paper: #10161b; --reader-night-inset: #1b232b;
+  --reader-night-rule: #3a4149; --reader-night-ink: #fcf8f0; --reader-night-muted: #d7ccbb; --reader-night-link: #f0a58c;
+  --site-print-a4-margin: 18mm; --site-print-a5-margin: 12mm;
+  --site-menu-max-height: 80vh; --site-mobile-brand-width: 13rem;
 }
+html[data-project="grove"] { --project-accent: var(--grove); --project-wash: var(--grove-wash); }
+html[data-project="river"] { --project-accent: var(--river); }
+html[data-project="home"] { --project-accent: var(--home); }

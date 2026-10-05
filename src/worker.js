@@ -19,7 +19,7 @@ export function createSiteWorker(config, { adapters = [], assetManifest = null, 
     async fetch(request, env = {}, ctx) {
       const url = new URL(request.url);
       const finish = (response, policy = {}) => withSecurityHeaders(response, request, policy);
-      const html = (body, status = 200) => finish(new Response(body, { status, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' } }), { scripts: Boolean(site.modules.reader || site.modules.publications || site.modules.contact || site.modules.education), contact: Boolean(site.modules.contact) });
+      const html = (body, status = 200) => finish(new Response(body, { status, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'public, max-age=300' } }), { scripts: Boolean(site.schema === 'ragbaz.project-site/v1' || site.modules.reader || site.modules.publications || site.modules.contact || site.modules.education), contact: Boolean(site.modules.contact) });
       if (site.basePath && url.pathname === site.basePath) return finish(new Response(null, { status: 308, headers: { Location: mounted(site) + url.search } }));
       if (site.basePath && !url.pathname.startsWith(site.basePath + '/')) return html(missing, 404);
       const route = url.pathname.slice(site.basePath.length) || '/';

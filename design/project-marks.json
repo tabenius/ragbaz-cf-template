@@ -1,0 +1,17 @@
+{
+  "schema": "ragbaz.project-marks/v0",
+  "marks": [
+    {
+      "project": "weftmark",
+      "source": "weftmark/assets/weftmark.svg",
+      "sha256": "a1e4b033bd010621766d7e56951170f7087ae360265fa7587ea3861bee131520",
+      "kind": "canonical-project-logo"
+    },
+    {
+      "project": "nostoi",
+      "source": "nostoi/assets/logo.svg",
+      "sha256": "88d5e7b68dc89d1cfd4548164e2ce2db23daade8ac3e3a0b6f3b10c335ec171a",
+      "kind": "canonical-project-logo"
+    }
+  ]
+}

@@ -4,6 +4,7 @@ const STATUSES = ['draft', 'published', 'revised', 'archived'];
 const RESERVED = ['/assets', '/api', '/healthz', '/manifest.json', '/robots.txt', '/sitemap.xml', '/publications', '/contact'];
 import { validateIntegration } from './integrations.js';
 import { publicProduct } from './domains.js';
+import { privacyPage } from './privacy.js';
 
 export function requireText(value, name) {
   if (typeof value !== 'string' || !value.trim()) throw new Error(`Missing ${name}`);
@@ -29,14 +30,16 @@ export function sections(value) {
     requireText(section.title, 'section title');
     if (!Array.isArray(section.paragraphs) || !section.paragraphs.length) throw new Error('Supply paragraphs');
     section.paragraphs.forEach(p => requireText(p, 'paragraph'));
+    if (section.code !== undefined) requireText(section.code, 'code example');
   }
 }
-function translations(value, locales) {
+function translations(value, locales, safeLink) {
   for (const [code, edition] of Object.entries(value || {})) {
     if (!locales.some(l => l.code === code)) throw new Error('Translation locale is not configured');
     requireText(edition.title, 'translated title');
     requireText(edition.description, 'translated description');
     sections(edition.sections);
+    for(const section of edition.sections)for(const link of section.links||[]){requireText(link.label,'translated link label');safeLink(link.href);}
   }
 }
 
@@ -72,7 +75,9 @@ export function normalizeSite(input, safeLink) {
   if (!Array.isArray(site.links) || !site.links.length) throw new Error('Supply project links');
   for (const link of site.links) { requireText(link.label, 'link label'); safeLink(link.href); }
   sections(site.sections);
-  translations(site.translations, site.locales);
+  const checkLinks = value => { for (const link of value || []) { requireText(link.label, 'link label'); safeLink(link.href); } };
+  for (const section of site.sections) checkLinks(section.links);
+  translations(site.translations, site.locales, safeLink);
   site.modules ??= {};
   if (Object.keys(site.modules).some(k => !['reader', 'contact', 'publications', 'education'].includes(k)) || Object.values(site.modules).some(v => typeof v !== 'boolean')) throw new Error('Unknown module or non-boolean capability');
   site.integrations ??= {};
@@ -80,6 +85,7 @@ export function normalizeSite(input, safeLink) {
   site.products = (site.products || []).map(publicProduct);
   if (new Set(site.products.map(p => p.id)).size !== site.products.length) throw new Error('Duplicate public product');
   site.pages ??= [];
+  if(site.modules.contact&&!site.pages.some(page=>page.id==='privacy'))site.pages.push(privacyPage(site));
   const paths = new Set(['/']);
   const ids = new Set(['home']);
   for (const page of site.pages) {
@@ -96,7 +102,8 @@ export function normalizeSite(input, safeLink) {
     if (!['page', 'article'].includes(page.kind)) throw new Error('Invalid page kind');
     page.tags ??= [];
     if (!Array.isArray(page.tags) || page.tags.some(t => typeof t !== 'string' || !t.trim())) throw new Error('Invalid tags');
-    sections(page.sections); translations(page.translations, site.locales);
+    sections(page.sections); translations(page.translations, site.locales, safeLink);
+    for (const section of page.sections) checkLinks(section.links);
   }
   site.redirects ??= {};
   for (const [from, to] of Object.entries(site.redirects)) {
@@ -108,6 +115,15 @@ export function normalizeSite(input, safeLink) {
     if (!/^\/assets\/[a-zA-Z0-9._/-]+$/.test(site.socialImage) || site.socialImage.includes('..')) throw new Error('Use a first-party social image');
   }
   if (site.socialCard !== undefined && typeof site.socialCard !== 'boolean') throw new Error('Social card flag must be boolean');
+  if (site.logo && (!/^\/assets\/[a-zA-Z0-9._/-]+\.svg$/.test(site.logo) || site.logo.includes('..'))) throw new Error('Use a first-party SVG project logo');
+  for (const card of site.highlights || []) for (const key of ['label', 'title', 'text']) requireText(card[key], 'highlight ' + key);
+  for (const step of site.workflow || []) { requireText(step.title, 'workflow title'); requireText(step.text, 'workflow text'); if (step.href) safeLink(step.href); }
+  if (site.quickstart) {
+    for (const key of ['title', 'summary', 'note']) requireText(site.quickstart[key], 'quickstart ' + key);
+    safeLink(site.quickstart.href);
+    if (!Array.isArray(site.quickstart.commands) || !site.quickstart.commands.length) throw new Error('Supply quickstart commands');
+    for (const command of site.quickstart.commands) { requireText(command.label, 'command label'); requireText(command.code, 'command text'); }
+  }
   if (site.publicationPolicy && site.publicationPolicy !== 'approved-only') throw new Error('Unknown publication policy');
   if (site.modules.education) {
     if (!Array.isArray(site.lessons) || !site.lessons.length || new Set(site.lessons).size !== site.lessons.length || site.lessons.some(id => !site.pages.some(p => p.id === id && p.status !== 'draft'))) throw new Error('Education needs a unique published lesson sequence');
@@ -131,5 +147,5 @@ export function edition(site, page, requested) {
   return { ...page, ...translated, locale, dir: site.locales.find(l => l.code === locale).dir, fallback: locale !== requested };
 }
 export function publications(site) {
-  return site.pages.filter(p => ['published', 'revised'].includes(p.status)).sort((a, b) => b.published.localeCompare(a.published) || a.id.localeCompare(b.id));
+  return site.pages.filter(p => p.kind==='article' && ['published', 'revised'].includes(p.status)).sort((a, b) => b.published.localeCompare(a.published) || a.id.localeCompare(b.id));
 }

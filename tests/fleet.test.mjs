@@ -109,7 +109,7 @@ test('approved-only publishing refuses stale, unknown and private-shaped content
 test('build inventories exact served assets and generates precise path-zone routes', async () => {
   const temp = await mkdtemp(join(tmpdir(), 'cf-build-'));
   try {
-    const config = { ...base, basePath: '/docs', routeZones: { [base.origin]: 'ragbaz.cc' } };
+    const config = { ...base, logo:undefined, basePath: '/docs', routeZones: { [base.origin]: 'ragbaz.cc' } };
     const { writeFile } = await import('node:fs/promises');
     await writeFile(join(temp, 'site.json'), JSON.stringify(config));
     await buildProject(join(temp, 'site.json'), join(temp, 'build'));
@@ -126,7 +126,7 @@ test('build refuses unapproved assets and source-directory output; excludes draf
   const { writeFile, mkdir } = await import('node:fs/promises');
   try {
     const draft = { ...base.pages[0], id: 'private-draft', path: '/private-draft/', title: 'DO_NOT_DEPLOY_THIS_DRAFT', status: 'draft' };
-    const site = validateSite({ ...base, pages: [...base.pages, draft], publicationPolicy: 'approved-only' });
+    const site = validateSite({ ...base, logo:undefined, pages: [...base.pages, draft], publicationPolicy: 'approved-only' });
     site.approvals = Object.fromEntries(approvedDocuments(site).map(p => [p.id, publicationDigest(p)]));
     const configPath = join(temp, 'site.json');
     await writeFile(configPath, JSON.stringify(site));

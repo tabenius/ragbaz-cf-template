@@ -4,7 +4,7 @@ import { readFile, mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createSiteWorker } from '../src/worker.js';
-import { validateSite } from '../src/site.js';
+import { validateSite, escapeHtml } from '../src/site.js';
 import { approvedDocuments, publicationDigest, verifyApprovals } from '../scripts/approvals.mjs';
 import { buildProject } from '../scripts/build-single.mjs';
 import { withSecurityHeaders } from '../src/http.js';
@@ -44,6 +44,24 @@ test('locale redirects reject protocol-relative paths and preserve ordinary quer
   }
   const response=await worker.fetch(request('/en/?next=https://example.invalid/'));
   assert.equal(response.status,308);assert.equal(response.headers.get('Location'),'/?next=https://example.invalid/');
+});
+test('the menu lists up to five publications and the button carries no redundant label', async () => {
+  const html = await (await createSiteWorker(example).fetch(request('/'))).text();
+  assert.ok(html.includes('<summary aria-label="Menu">'));
+  assert.ok(!html.includes('>Explore<'));
+  const menu = html.match(/<nav aria-label="This project">([\s\S]*?)<\/nav>/)[1];
+  for (const page of example.pages.filter(p => p.id !== 'privacy')) assert.ok(menu.includes(`>${escapeHtml(page.title)}</a>`), page.id);
+  assert.ok(menu.includes('>Publications</a>'));
+  assert.ok(!menu.includes('More in Publications'));
+});
+test('menus beyond five publications link onward with a count', async () => {
+  const extras = [1, 2, 3].map(n => ({ ...example.pages[0], id: `extra-${n}`, path: `/extra-${n}/`, title: `Extra ${n}` }));
+  const html = await (await createSiteWorker({ ...example, pages: [...example.pages, ...extras] }).fetch(request('/'))).text();
+  const menu = html.match(/<nav aria-label="This project">([\s\S]*?)<\/nav>/)[1];
+  assert.ok(menu.includes('>Extra 1</a>'));
+  assert.ok(!menu.includes('>Extra 2</a>'));
+  assert.ok(!menu.includes('>Extra 3</a>'));
+  assert.ok(menu.includes('More in Publications (8) →'));
 });
 test('nested mounts prefix all links and strip only that prefix for assets', async () => {
   const config = { ...base, basePath: '/docs/project', routeZones: { [base.origin]: 'ragbaz.cc' } };

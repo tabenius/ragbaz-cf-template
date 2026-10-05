@@ -6,6 +6,7 @@
   "logo":"/assets/logo.svg","motifCaption":"The homecoming: a chain carried safely across the river.","socialCard":true,
   "modules":{"reader":true,"publications":true,"contact":true},
   "peerMaintenance":true,
+  "peerAccountReconciliation":true,
   "products":[{"id":"nostoi","name":"Nostoi","lifecycle":"development","capabilities":["chain-verification","streaming-verification","sqlite-store","durable-anchoring","multi-destination-fanout","signed-attestations","kernel-ingestion","bindings"]}],
   "links":[{"label":"Inspect the source & formats","href":"https://github.com/tabenius/nostoi"},{"label":"The verification brief","href":"https://nostoi.ragbaz.cc/verification/"}],
   "featuredPublication":{"id":"verification","label":"The witness problem / Brief 01","linkLabel":"Read the verification brief","image":"/assets/witness-map.svg","imageAlt":"Three separate evidence questions: the recorded sequence, the signing key, and an external observation."},

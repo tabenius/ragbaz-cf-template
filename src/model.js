@@ -81,6 +81,7 @@ export function normalizeSite(input, safeLink) {
   site.modules ??= {};
   if (Object.keys(site.modules).some(k => !['reader', 'contact', 'publications', 'education', 'demonstration'].includes(k)) || Object.values(site.modules).some(v => typeof v !== 'boolean')) throw new Error('Unknown module or non-boolean capability');
   if (site.peerMaintenance !== undefined && (typeof site.peerMaintenance !== 'boolean' || (site.peerMaintenance && !site.modules.contact))) throw new Error('Peer maintenance needs an enabled contact module and boolean flag');
+  if (site.peerAccountReconciliation !== undefined && (typeof site.peerAccountReconciliation !== 'boolean' || (site.peerAccountReconciliation && !site.peerMaintenance))) throw new Error('Account reconciliation needs explicit peer maintenance and boolean flag');
   if (site.modules.demonstration) {
     const demo = site.demonstration;
     if (!demo || demo.schema !== 'ragbaz.demonstration/v1') throw new Error('Supply a versioned demonstration');

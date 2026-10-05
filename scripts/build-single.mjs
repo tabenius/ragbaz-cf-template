@@ -102,9 +102,8 @@ export async function buildProject(configPath, outputPath) {
   const production={...base,workers_dev:false,routes};
   if(site.modules.contact&&process.env.RAGBAZ_PEERS_D1_ID){
     production.d1_databases=[{binding:'PEERS_DB',database_name:'detcordon-marketing-leads',database_id:process.env.RAGBAZ_PEERS_D1_ID,migrations_dir:relative(output,join(templateRoot,'migrations/peers'))}];
-    if(site.slug==='weftmark'&&process.env.RAGBAZ_ACCOUNTS_D1_ID){
+    if(site.peerAccountReconciliation&&process.env.RAGBAZ_ACCOUNTS_D1_ID){
       production.d1_databases.push({binding:'ACCOUNTS_DB',database_name:'ragbaz-cc-accounts',database_id:process.env.RAGBAZ_ACCOUNTS_D1_ID});
-      production.triggers={crons:['17 3 * * *']};
     }
     if(site.peerMaintenance) production.triggers={crons:['17 3 * * *']};
   }

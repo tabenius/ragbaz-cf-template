@@ -14,7 +14,7 @@ if(action==='deploy'&&mode==='--production'){
     const peers=databases.find(db=>db.name==='detcordon-marketing-leads');
     if(!peers)throw new Error('Existing DetCordon marketing database not found; refusing to create or guess a replacement');
     process.env.RAGBAZ_PEERS_D1_ID=peers.uuid;
-    if(slug==='weftmark'){
+    if(config.peerAccountReconciliation){
       const accounts=databases.find(db=>db.name==='ragbaz-cc-accounts');
       if(!accounts)throw new Error('Existing RAGBAZ account database not found');
       process.env.RAGBAZ_ACCOUNTS_D1_ID=accounts.uuid;

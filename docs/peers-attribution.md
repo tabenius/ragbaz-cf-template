@@ -8,10 +8,12 @@ Ephor's marketing source sends email through Resend; its `ephor-audit-db`
 contains audit data, not a shared contact directory. Do not put marketing data
 in the audit database or alter audit-chain tables.
 
-All four sites bind the same `PEERS_DB`. The WeftMark site additionally binds
-the existing `ragbaz-cc-accounts` database for narrowly selected account-match
-reads and runs the daily maintenance/reconciliation schedule. Database IDs are
-resolved at deployment or provided in the environment, never committed.
+All four sites can bind the same `PEERS_DB`. Nostoi owns the shared daily
+maintenance/reconciliation schedule and explicitly binds the existing
+`ragbaz-cc-accounts` database for narrowly selected, opt-in account-match reads.
+WeftMark does not need an additional cron or account binding. This consolidates
+the work within the account's existing Workers Free cron allocation. Database
+IDs are resolved at deployment or provided in the environment, never committed.
 
 `migrations/peers/0001_peers.sql` adds the schema. The second migration imports
 only active DetCordon lead records, preserving original expiry, purpose and

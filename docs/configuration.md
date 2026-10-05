@@ -131,9 +131,12 @@ labelled; they are not projections of a real application's state.
 
 For a site using the shared `PEERS_DB`, `peerMaintenance: true` explicitly
 enables daily production expiration at 03:17 UTC when the database binding is
-configured. Preview builds have no database or cron. Nostoi is the first deployed
-maintenance owner; the existing WeftMark account-reconciliation schedule remains
-supported. Expiration acts on the namespaced peer tables, not legacy `leads`.
+configured. Preview builds have no database or cron. Nostoi is the shared
+maintenance owner. Its additional `peerAccountReconciliation: true` explicitly
+binds the existing account database for opt-in candidate matching. Other sites,
+including WeftMark, use the shared contact database without their own cron or
+account binding. This fits the existing free-plan cron limit. Expiration acts on
+the namespaced peer tables, not legacy `leads`.
 
 Contact accepts exact JSON or URL-encoded media types, bounded UTF-8 bodies and
 object envelopes. Repeated form fields are refused rather than resolving consent

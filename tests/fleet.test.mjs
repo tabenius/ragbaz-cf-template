@@ -91,6 +91,9 @@ test('authenticated adapters retain cookies and force no-store; overlap is refus
 test('peer maintenance is explicit and requires contact to be enabled', () => {
   for(const patch of [{peerMaintenance:'true'},{peerMaintenance:true,modules:{...base.modules,contact:false}}]) assert.throws(()=>validateSite({...base,...patch}),/Peer maintenance/);
   assert.equal(validateSite({...base,peerMaintenance:true}).peerMaintenance,true);
+  assert.throws(()=>validateSite({...base,peerAccountReconciliation:true}),/Account reconciliation/);
+  assert.throws(()=>validateSite({...base,peerMaintenance:true,peerAccountReconciliation:'true'}),/Account reconciliation/);
+  assert.equal(validateSite({...base,peerMaintenance:true,peerAccountReconciliation:true}).peerAccountReconciliation,true);
 });
 test('demonstration cases are escaped, visible without scripts, and marked illustrative', async () => {
   const demo=structuredClone(example.demonstration);
@@ -183,6 +186,7 @@ test('build inventories exact served assets and generates precise path-zone rout
 test('peer maintenance schedules production expiration without account binding or preview cron', async () => {
   const temp=await mkdtemp(join(tmpdir(),'cf-retention-'));
   const previous=process.env.RAGBAZ_PEERS_D1_ID;
+  const previousAccounts=process.env.RAGBAZ_ACCOUNTS_D1_ID;
   try {
     process.env.RAGBAZ_PEERS_D1_ID='00000000-0000-0000-0000-000000000000';
     const {writeFile}=await import('node:fs/promises');
@@ -194,8 +198,20 @@ test('peer maintenance schedules production expiration without account binding o
     assert.deepEqual(production.triggers,{crons:['17 3 * * *']});
     assert.deepEqual(production.d1_databases.map(d=>d.binding),['PEERS_DB']);
     assert.equal(preview.triggers,undefined);assert.equal(preview.d1_databases,undefined);
+    process.env.RAGBAZ_ACCOUNTS_D1_ID='00000000-0000-0000-0000-000000000001';
+    await writeFile(join(temp,'site.json'),JSON.stringify({...site,peerAccountReconciliation:true}));
+    await buildProject(join(temp,'site.json'),join(temp,'build'));
+    const owner=JSON.parse(await readFile(join(temp,'build/wrangler.production.json')));
+    assert.deepEqual(owner.d1_databases.map(d=>d.binding),['PEERS_DB','ACCOUNTS_DB']);
+    assert.deepEqual(owner.triggers,{crons:['17 3 * * *']});
+    await writeFile(join(temp,'site.json'),JSON.stringify({...site,slug:'weftmark',peerMaintenance:false}));
+    await buildProject(join(temp,'site.json'),join(temp,'build'));
+    const consumer=JSON.parse(await readFile(join(temp,'build/wrangler.production.json')));
+    assert.deepEqual(consumer.d1_databases.map(d=>d.binding),['PEERS_DB']);
+    assert.equal(consumer.triggers,undefined);
   }finally{
     if(previous===undefined)delete process.env.RAGBAZ_PEERS_D1_ID;else process.env.RAGBAZ_PEERS_D1_ID=previous;
+    if(previousAccounts===undefined)delete process.env.RAGBAZ_ACCOUNTS_D1_ID;else process.env.RAGBAZ_ACCOUNTS_D1_ID=previousAccounts;
     await rm(temp,{recursive:true,force:true});
   }
 });

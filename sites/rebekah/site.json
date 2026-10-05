@@ -4,7 +4,19 @@
   "description":"Rebekah gives agent execution, local inference, portable skills and engineering evidence a reproducible, self-hosted home. Distinct services keep distinct responsibilities, with an authenticated gateway between the workshop and the outside world.",
   "status":"Executable bootstrap · not yet a production-ready distribution","updated":"2026-10-03",
   "logo":"/assets/logo.svg","motifCaption":"A home for cooperation, without blurring the boundaries.","socialCard":true,
-  "modules":{"reader":true,"publications":true,"contact":true},
+  "modules":{"reader":true,"publications":true,"contact":true,"demonstration":true},
+  "featuredPublication":{"id":"deployment","label":"The boundary problem / Brief 01","linkLabel":"Read the deployment brief","image":"/assets/rooms-map.svg","imageAlt":"Separate service rooms connect only through an authenticated gateway; the public page stays outside."},
+  "demonstration":{
+    "schema":"ragbaz.demonstration/v1","label":"The boundary desk / Illustrated cases","title":"The same request meets four different doors.",
+    "description":"Select a case to see how one request is treated at each boundary of the workshop. Paths and outcomes are the documented ones, not live probes.",
+    "disclaimer":"Presentation-only illustrations. No request is sent and no access is granted by this explorer.",
+    "cases":[
+      {"id":"loopback","title":"Inside the room: loopback directly","description":"A supervised service answers on its own loopback address.","fields":[{"label":"Path","value":"127.0.0.1:8765/healthz"},{"label":"Outcome","value":"Answered locally"}],"conclusion":"Illustration: loopback is for the supervisor and the operator on the machine — not a public address."},
+      {"id":"gateway","title":"At the door: the authenticated gateway","description":"An allow-listed backend route with a valid bearer credential.","fields":[{"label":"Path","value":"/weftmark/healthz with bearer token"},{"label":"Outcome","value":"Proxied after authentication"}],"conclusion":"Illustration: the gateway checks first and forwards second; the client never handles backend credentials."},
+      {"id":"unexposed","title":"No such room: unexposed backend","description":"A path no allow-list names.","fields":[{"label":"Path","value":"/ephor/api when unexposed"},{"label":"Outcome","value":"404, no further detail"}],"conclusion":"Illustration: what is not exposed does not exist as far as the network is concerned."},
+      {"id":"anonymous","title":"No credential: unauthenticated request","description":"An allow-listed route without any bearer credential.","fields":[{"label":"Path","value":"/weftmark/healthz without token"},{"label":"Outcome","value":"401, backend untouched"}],"conclusion":"Illustration: authentication happens before any backend sees the request."}
+    ]
+  },
   "products":[{"id":"rebekah","name":"Rebekah","lifecycle":"prototype","capabilities":["oci-runtime","service-isolation","authenticated-gateway"]}],
   "links":[{"label":"Read the human story","href":"https://ragbaz.cc/thinktank/en/thinktank/the-loom-and-the-grove"},{"label":"Source & deployment","href":"https://github.com/tabenius/rebekah"}],
   "highlights":[{"label":"Reproducibility","title":"A runtime you can rebuild","text":"A Nix-built OCI image brings the core tools together. Image pins and container checks make changes deliberate."},{"label":"Separation","title":"Every service has its own room","text":"Separate identities and state directories help contain privileges. Loopback services are reached through an authenticated, allow-listed gateway."},{"label":"Choice","title":"Governance is explicit","text":"The public baseline works without Ephor. Enable the separate governed integration when its policy and oversight fit the work."}],

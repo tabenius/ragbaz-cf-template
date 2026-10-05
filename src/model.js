@@ -5,6 +5,7 @@ const RESERVED = ['/assets', '/api', '/healthz', '/manifest.json', '/robots.txt'
 import { validateIntegration } from './integrations.js';
 import { publicProduct } from './domains.js';
 import { privacyPage } from './privacy.js';
+import { CODE_LANGUAGES } from './code.js';
 
 export function requireText(value, name) {
   if (typeof value !== 'string' || !value.trim()) throw new Error(`Missing ${name}`);
@@ -31,6 +32,7 @@ export function sections(value) {
     if (!Array.isArray(section.paragraphs) || !section.paragraphs.length) throw new Error('Supply paragraphs');
     section.paragraphs.forEach(p => requireText(p, 'paragraph'));
     if (section.code !== undefined) requireText(section.code, 'code example');
+    if (section.language !== undefined && !CODE_LANGUAGES.includes(section.language)) throw new Error('Unknown code language');
   }
 }
 function translations(value, locales, safeLink) {
@@ -148,7 +150,7 @@ export function normalizeSite(input, safeLink) {
     for (const key of ['title', 'summary', 'note']) requireText(site.quickstart[key], 'quickstart ' + key);
     safeLink(site.quickstart.href);
     if (!Array.isArray(site.quickstart.commands) || !site.quickstart.commands.length) throw new Error('Supply quickstart commands');
-    for (const command of site.quickstart.commands) { requireText(command.label, 'command label'); requireText(command.code, 'command text'); }
+    for (const command of site.quickstart.commands) { requireText(command.label, 'command label'); requireText(command.code, 'command text'); if (command.language !== undefined && !CODE_LANGUAGES.includes(command.language)) throw new Error('Unknown command language'); }
   }
   if (site.publicationPolicy && site.publicationPolicy !== 'approved-only') throw new Error('Unknown publication policy');
   if (site.modules.education) {

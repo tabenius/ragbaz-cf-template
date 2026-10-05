@@ -4,7 +4,18 @@
   "description":"Tamper-evident audit chains for systems whose actions must remain open to examination. Nostoi verifies recorded history, identifies the first inconsistency, and supports checkpoints and signed statements beyond the producer's own account of events.",
   "status":"Active development · verifier, CLI and TUI in source; registry publication pending","updated":"2026-10-05",
   "logo":"/assets/logo.svg","motifCaption":"The homecoming: a chain carried safely across the river.","socialCard":true,
-  "modules":{"reader":true,"publications":true,"contact":true},
+  "modules":{"reader":true,"publications":true,"contact":true,"demonstration":true},
+  "demonstration":{
+    "schema":"ragbaz.demonstration/v1","label":"The exit-status desk / Illustrated cases","title":"Three numbers that refuse to mean the same thing.",
+    "description":"Select a case to see what each verification outcome establishes — and what it leaves open. Exit codes are the documented ones, not live measurements.",
+    "disclaimer":"Presentation-only illustrations. No chain is inspected and no finding is produced by this explorer.",
+    "cases":[
+      {"id":"intact","title":"Exit 0: the record holds together","description":"Every record verified against its digest and predecessor.","fields":[{"label":"Continuity","value":"Intact through the checked head"},{"label":"Established","value":"Internal consistency only"}],"conclusion":"Illustration: proceed to the external checkpoint and signature questions; intactness alone answers neither."},
+      {"id":"broken","title":"Exit 1: the break has a position","description":"The first inconsistent record is named with its intact prefix.","fields":[{"label":"Continuity","value":"Broken at the named position"},{"label":"Established","value":"Where the evidence stops"}],"conclusion":"Illustration: investigate from the break backward. Do not extend the chain while it is broken."},
+      {"id":"unusable","title":"Exit 2: no opinion could be formed","description":"The input could not be read, parsed or found.","fields":[{"label":"Continuity","value":"Unknown"},{"label":"Established","value":"Nothing about the chain"}],"conclusion":"Illustration: fix the input, permissions or path first. An unusable check is neither a pass nor a failure of the record."},
+      {"id":"conflict","title":"Exit 4: readable destinations disagree","description":"Two fan-out checkpoints commit to different tuples.","fields":[{"label":"Continuity","value":"Disputed between witnesses"},{"label":"Established","value":"A contradiction, not an outage"}],"conclusion":"Illustration: treat disagreement as a finding to investigate, not as an outage to retry. Success never implies every destination was checked."}
+    ]
+  },
   "peerMaintenance":true,
   "peerAccountReconciliation":true,
   "products":[{"id":"nostoi","name":"Nostoi","lifecycle":"development","capabilities":["chain-verification","streaming-verification","sqlite-store","durable-anchoring","multi-destination-fanout","signed-attestations","kernel-ingestion","bindings"]}],

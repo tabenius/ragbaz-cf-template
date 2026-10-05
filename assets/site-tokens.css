@@ -22,10 +22,14 @@
   --reader-night-rule: #3a4149; --reader-night-ink: #fcf8f0; --reader-night-muted: #d7ccbb; --reader-night-link: #f0a58c;
   --site-print-a4-margin: 18mm; --site-print-a5-margin: 12mm;
   --site-menu-max-height: 80vh; --site-mobile-brand-width: 13rem;
+  --code-bg: #282828; --code-ink: #ebdbb2;
+  --code-orange: #fe8019; --code-green: #b8bb26; --code-yellow: #fabd2f;
+  --code-blue: #83a598; --code-purple: #d3869b; --code-red: #fb4934;
+  --code-gray: #928374; --code-aqua: #8ec07c;
 }
 html[data-project="grove"] { --project-accent: var(--grove); --project-wash: var(--grove-wash); }
-/* One archival layout, three project palettes: Witness, Evidence and Grove Register. */
-html:is([data-project="river"],[data-project="loom"],[data-project="grove"]) {
+/* One archival layout, four project palettes: Witness, Evidence, Grove and Home Register. */
+html:is([data-project="river"],[data-project="loom"],[data-project="grove"],[data-project="home"]) {
   --font-display: Georgia, "Times New Roman", serif;
   --site-radius: .15rem; --site-radius-small: .1rem;
   --site-hero-size: clamp(4rem,9vw,8rem);
@@ -68,4 +72,12 @@ html[data-project="grove"] {
   --hero-loom-glow: rgba(47,125,82,.22); --hero-grove-glow: rgba(185,138,78,.12);
   --register-rule: rgba(217,185,136,.07);
 }
-html[data-project="home"] { --project-accent: var(--home); }
+html[data-project="home"] {
+  --paper-page: #f8f3ea; --paper-inset: #ede4d1; --paper-raise: #fdf9f0;
+  --paper-rule: #d9cbb0; --ink-body: #453b30; --ink-emphasis: #33261a;
+  --project-accent: #96672e; --project-wash: #f0e8d6;
+  --coral: #ddba91; --coral-deep: #77532a; --ink-link: #77532a;
+  --hero-paper: #2b2116; --hero-muted: #ddd2bb;
+  --hero-loom-glow: rgba(150,103,46,.22); --hero-grove-glow: rgba(150,103,46,.10);
+  --register-rule: rgba(221,186,145,.07);
+}

@@ -4,7 +4,7 @@ import { createServer } from 'node:net';
 import { once } from 'node:events';
 import { join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, cp } from 'node:fs/promises';
 import { root, siteNames, buildSite } from './build.mjs';
 import { buildProject } from './build-single.mjs';
 
@@ -19,6 +19,7 @@ mountedConfig.routeZones = { [mountedConfig.origin]: 'ragbaz.cc' };
 const fixtureRoot = join(root, 'build/mounted-smoke');
 await mkdir(fixtureRoot, { recursive: true });
 await writeFile(join(fixtureRoot, 'site.json'), JSON.stringify(mountedConfig));
+await cp(join(root,'sites/weftmark/public'),join(fixtureRoot,'public'),{recursive:true});
 scenarios.push({ slug: 'mounted-localized', output: await buildProject(join(fixtureRoot, 'site.json'), join(fixtureRoot, 'worker')), config: mountedConfig });
 
 for (const { slug, output, config } of scenarios) {

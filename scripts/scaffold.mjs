@@ -14,7 +14,7 @@ const site = validateSite(JSON.parse(await readFile(join(root, 'sites', slug, 's
 try { await lstat(target); throw new Error('Destination already exists'); } catch (error) { if (error.code !== 'ENOENT') throw error; }
 await mkdir(target);
 const inventory = {};
-const files = ['scripts/build-single.mjs', 'scripts/social-card.mjs', 'scripts/approvals.mjs', 'scripts/approval-digests.mjs', 'package.json', 'AGENTS.md', 'README.md'];
+const files = ['scripts/build-single.mjs', 'scripts/social-card.mjs', 'scripts/approvals.mjs', 'scripts/approval-digests.mjs', 'package.json', 'AGENTS.md', 'README.md','migrations/peers/0001_peers.sql','migrations/peers/0002_detcordon_import.sql'];
 for (const directory of ['src', 'assets', 'design', 'docs']) {
   for (const file of await readdir(join(root, directory))) {
     if (file.startsWith('.') || /(?:\.sw[op]|~)$/.test(file)) continue;
@@ -38,6 +38,8 @@ await writeFile(join(target, 'template.lock.json'), JSON.stringify({
   note: 'Exact bytes are hash-pinned. This is not a Git submodule or automatic inheritance. Convert to a commit-pinned submodule after upstream publication.',
 }, null, 2) + '\n');
 await writeFile(join(target, 'site.json'), JSON.stringify(site, null, 2) + '\n');
+const { cp }=await import('node:fs/promises');
+try { await lstat(join(root,'sites',slug,'public')); await cp(join(root,'sites',slug,'public'),join(target,'public'),{recursive:true,dereference:false}); } catch(error){if(error.code!=='ENOENT')throw error;}
 const templatePackage = JSON.parse(await readFile(join(root, 'package.json')));
 await writeFile(join(target, 'package.json'), JSON.stringify({
   name: `@ragbaz/${slug}-site`, private: true, type: 'module', engines: templatePackage.engines,

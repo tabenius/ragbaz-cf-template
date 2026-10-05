@@ -2,8 +2,9 @@
 @media screen {
   html[data-reader-theme="sepia"] { --paper-page: var(--reader-sepia-paper); }
   html[data-reader-theme="white"] { --paper-page: var(--paper-raise); }
-  html[data-reader-theme="night"] { --paper-page: var(--reader-night-paper); --paper-inset: var(--reader-night-inset); --paper-rule: var(--reader-night-rule); --ink-body: var(--reader-night-ink); --ink-emphasis: var(--reader-night-ink); --ink-muted: var(--reader-night-muted); --ink-link: var(--reader-night-link); --focus-ring: var(--reader-night-link); }
+  html[data-reader-theme="night"] { --paper-page: var(--reader-night-paper); --paper-inset: var(--reader-night-inset); --paper-raise:var(--reader-night-inset); --paper-rule: var(--reader-night-rule); --ink-body: var(--reader-night-ink); --ink-emphasis: var(--reader-night-ink); --ink-muted: var(--reader-night-muted); --ink-link: var(--reader-night-link); --focus-ring: var(--reader-night-link); --project-accent:var(--reader-night-link); }
   html[data-reader-font="sans"] body { font-family: var(--reader-font-sans); }
+  html[data-reader-font="serif"] body { font-family: var(--font-text); }
   html[data-reader-font="mono"] body { font-family: var(--font-mono); }
 }
 @media print {

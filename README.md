@@ -4,7 +4,7 @@ Shared, maintained source for RAGBAZ project websites on Cloudflare Workers.
 The first consumers are **WeftMark, Nostoi, Sylvae and Rebekah**. Each builds to
 its own Worker; all four import the same renderer and HTTP invariants.
 
-Version 0.1.0: the fleet website core and its first four consumers.
+Version 0.2.0: approachable studio websites, editorial design and shared interest capture.
 Source home: [tabenius/ragbaz-cf-template](https://github.com/tabenius/ragbaz-cf-template).
 Product runtimes retain their own maturity and authorities; this website release
 does not declare those products production-ready.
@@ -18,6 +18,7 @@ npm run bundle                     # four Wrangler dry-run bundles
 npm run smoke                      # real local workerd HTTP/asset checks
 npm run smoke:browser              # Chromium interaction/mobile checks
 npm run smoke:live                 # exact deployed commit and asset hashes
+npm run smoke:peers                # live form/data checks; synthetic records only
 npm run dev -- weftmark             # local workerd preview
 npm run deploy -- weftmark          # workers.dev preview deployment
 npm run deploy -- weftmark --production
@@ -43,9 +44,10 @@ Unknown URLs return a real 404. The health endpoint describes only the website.
 dates, locale editions, alias redirects, nested path mounts and optional reader,
 catalog and contact modules. Existing v0 configurations remain accepted.
 
-All four project sites now include a short guide and a publication index.
-WeftMark also includes a Swedish homepage edition. Reader preferences use
-local storage and first-party scripts; normal reading works without scripts.
+All four project sites feature the actual multilingual “The Loom and the Grove”
+article, substantial project explanations, use cases, an interoperable workflow,
+quickstarts, project marks and a clear RAGBAZ studio identity. Reader preferences
+use local storage and first-party scripts; normal reading works without scripts.
 
 - [v1 configuration and extension API](docs/configuration.md)
 - [Feature priorities and module ownership](docs/fleet-roadmap.md)
@@ -56,10 +58,13 @@ adapters. Authenticated API adapters retain cookies and use private/no-store;
 their own identity authority must authenticate requests. The core does not
 implement account login or grant authorization through a response profile.
 
-Contact is opt-in and disabled on the four project sites. When enabled it needs
-an explicitly configured service binding, rate-limit binding and HMAC secret;
-missing configuration returns 503. Email delivery and any storage/retention
-belong to that receiving service. See the configuration guide.
+Contact forms are enabled on all four sites. They reuse the existing DetCordon
+marketing D1 database through separate, additive peer/interest tables. Repeated
+normalized emails share an internal contact UUID; each request keeps its own
+date, project, domain, page and name claim. Optional attribution and account
+matching are explicitly consented and qualified. Browser privacy signals win.
+See [shared peers and attribution](docs/peers-attribution.md) for schema,
+retention, migration, Cloudflare settings and account-match limitations.
 
 ## Ownership
 

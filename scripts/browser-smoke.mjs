@@ -42,6 +42,7 @@ try {
   const { targetId } = await command('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await command('Target.attachToTarget', { targetId, flatten: true });
   await command('Page.enable', {}, sessionId);
+  await command('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false},sessionId);
   const evaluate = async expression => {
     const result = await command('Runtime.evaluate', { expression, returnByValue: true }, sessionId);
     if (result.exceptionDetails) throw new Error(JSON.stringify(result.exceptionDetails));
@@ -58,6 +59,15 @@ try {
   await navigate('/');
   assert.equal(await evaluate(`document.querySelector('h1').textContent`), 'WeftMark');
   assert.equal(await evaluate(`document.querySelector('link[rel=canonical]').href`), 'https://weftmark.ragbaz.cc/');
+  assert.equal(await evaluate(`document.querySelectorAll('.article-languages a').length`),5);
+  assert.ok(await evaluate(`document.querySelector('.featured-article a.button').href.includes('/thinktank/the-loom-and-the-grove')`));
+  assert.ok(await evaluate(`['https://sylvae.ragbaz.cc','https://nostoi.ragbaz.cc','https://rebekah.ragbaz.cc'].every(origin=>[...document.querySelectorAll('a')].some(a=>a.href===origin+'/'))`));
+  await evaluate(`document.querySelector('[data-main-menu]').open=true`);
+  assert.ok(await evaluate(`document.querySelector('[data-main-menu]').open`));
+  await command('Input.dispatchKeyEvent',{type:'keyDown',key:'Escape',code:'Escape'},sessionId);
+  assert.equal(await evaluate(`document.querySelector('[data-main-menu]').open`),false);
+  const desktop=await command('Page.captureScreenshot',{format:'png',captureBeyondViewport:true},sessionId);
+  await writeFile(join(output,'browser-desktop.png'),Buffer.from(desktop.data,'base64'));
   await evaluate(`(() => { const select = document.querySelector('[data-reader=theme]'); select.value = 'night'; select.dispatchEvent(new Event('change')); })()`);
   assert.equal(await evaluate(`document.documentElement.dataset.readerTheme`), 'night');
   await navigate('/publications/');
@@ -70,7 +80,7 @@ try {
   assert.ok(await evaluate(`document.documentElement.scrollWidth <= window.innerWidth`), 'Mobile layout overflows');
   const shot = await command('Page.captureScreenshot', { format: 'png' }, sessionId);
   await writeFile(join(output, 'browser-mobile.png'), Buffer.from(shot.data, 'base64'));
-  console.log('Chromium: rendering, preferences, catalog layout, Swedish edition and mobile width passed');
+  console.log('Chromium: editorial rendering, five article editions, fleet links, menu keyboard control, preferences, catalog, Swedish edition and mobile width passed');
 } finally {
   socket?.close();
   for (const child of [browser, server].filter(Boolean)) {

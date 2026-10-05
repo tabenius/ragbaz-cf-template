@@ -112,7 +112,9 @@ Configure in the project's deployment adapter/config:
 The receiving service owns storage, retention and email delivery. It must define
 that policy before deployment. The Worker does not forward raw IP, user agent
 or contact secrets. No binding/secret means 503; rate limits mean 429; acceptance
-means 202, not proof that email arrived. The four initial sites leave it disabled.
+means 202, not proof that email arrived. The four studio sites enable the direct
+shared-D1 path described in `peers-attribution.md`; the service-binding path
+remains available to other consumers. Missing infrastructure refuses a request.
 
 Generated generic configs intentionally do not invent binding names/resources.
 Consumer-owned deployment tooling can extend them with those explicit bindings.

@@ -8,7 +8,7 @@ function canonical(value) {
 }
 export function publicationDigest(page) { return createHash('sha256').update(canonical(page)).digest('hex'); }
 export function approvedDocuments(site) {
-  return [{ ...homePage(site), tagline: site.tagline, links: site.links, product_status: site.status }, ...site.pages.filter(p => p.status !== 'draft')];
+  return [{ ...homePage(site), tagline: site.tagline, links: site.links, product_status: site.status, highlights:site.highlights||[],workflow:site.workflow||[],quickstart:site.quickstart||null,motifCaption:site.motifCaption||null }, ...site.pages.filter(p => p.status !== 'draft')];
 }
 export function verifyApprovals(site) {
   if (site.publicationPolicy !== 'approved-only') return;

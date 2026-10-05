@@ -1,6 +1,6 @@
 {
   "name": "@ragbaz/cf-template",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "engines": { "node": ">=22" },
@@ -12,6 +12,7 @@
     "smoke": "node scripts/smoke.mjs",
     "smoke:browser": "node scripts/browser-smoke.mjs",
     "smoke:live": "node scripts/live-smoke.mjs",
+    "smoke:peers": "node scripts/live-peer-smoke.mjs",
     "dev": "node scripts/run-site.mjs dev",
     "deploy": "node scripts/run-site.mjs deploy",
     "scaffold": "node scripts/scaffold.mjs"

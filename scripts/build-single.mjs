@@ -24,7 +24,7 @@ export async function buildProject(configPath, outputPath) {
   const provenance = JSON.parse(await readFile(join(templateRoot, 'design/provenance.json'), 'utf8'));
   const tokens = await readFile(join(templateRoot, 'assets/tokens.css'));
   if (createHash('sha256').update(tokens).digest('hex') !== provenance.sha256) throw new Error('Vendored token digest mismatch');
-  const assets = ['tokens.css', 'site-tokens.css', 'site.css', ...(site.modules.reader ? ['reader.css', 'reader.js'] : []), ...(site.modules.publications ? ['catalog.js'] : []), ...(site.modules.contact ? ['contact.js'] : []), ...(site.modules.education ? ['education.js'] : [])];
+  const assets = ['tokens.css', 'site-tokens.css', 'site.css', 'mark.svg', ...(site.schema === 'ragbaz.project-site/v1' ? ['chrome.js'] : []), ...(site.modules.reader ? ['reader.css', 'reader.js'] : []), ...(site.modules.publications ? ['catalog.js'] : []), ...(site.modules.contact ? ['contact.js'] : []), ...(site.modules.education ? ['education.js'] : [])];
   for (const asset of assets) await copyFile(join(templateRoot, 'assets', asset), join(output, 'public/assets', asset));
   if (site.socialCard && !site.socialImage) {
     await writeFile(join(output, 'public/assets/social-card.png'), await socialCard(site, new URL('../', import.meta.url)));
@@ -57,6 +57,7 @@ export async function buildProject(configPath, outputPath) {
   } catch (error) { if (error.code !== 'ENOENT') throw error; }
   if (site.publicationPolicy === 'approved-only' && Object.keys(site.assetApprovals || {}).some(p => !copied.has(p))) throw new Error('Unknown asset approval');
   if (site.socialImage) await readFile(join(output, 'public', site.socialImage));
+  if (site.logo) await readFile(join(output,'public',site.logo));
   const inventory = [];
   async function inventoryAssets(directory, prefix = '') {
     for (const name of (await readdir(directory)).sort()) {
@@ -83,7 +84,7 @@ export async function buildProject(configPath, outputPath) {
     name: `ragbaz-${site.slug}-site`, main: './worker.mjs', compatibility_date: '2026-10-01',
     workers_dev: true, preview_urls: false,
     assets: { directory: './public', binding: 'ASSETS', run_worker_first: true, html_handling: 'none', not_found_handling: 'none' },
-    observability: { enabled: true },
+    observability: { enabled: true, logs:{enabled:true,invocation_logs:false} },
   };
   const bindings = [...new Set(Object.values(site.integrations).map(c => c.binding))];
   if (bindings.length) {
@@ -97,7 +98,15 @@ export async function buildProject(configPath, outputPath) {
   }
   await writeFile(join(output, 'wrangler.json'), JSON.stringify(base, null, 2) + '\n');
   const routes = [site.origin, ...site.aliases].flatMap(value => site.basePath ? [site.basePath, site.basePath + '/*'].map(route => ({ pattern: new URL(value).hostname + route, zone_name: site.routeZones[value] })) : [{ pattern: new URL(value).hostname, custom_domain: true }]);
-  await writeFile(join(output, 'wrangler.production.json'), JSON.stringify({ ...base, workers_dev: false, routes }, null, 2) + '\n');
+  const production={...base,workers_dev:false,routes};
+  if(site.modules.contact&&process.env.RAGBAZ_PEERS_D1_ID){
+    production.d1_databases=[{binding:'PEERS_DB',database_name:'detcordon-marketing-leads',database_id:process.env.RAGBAZ_PEERS_D1_ID,migrations_dir:relative(output,join(templateRoot,'migrations/peers'))}];
+    if(site.slug==='weftmark'&&process.env.RAGBAZ_ACCOUNTS_D1_ID){
+      production.d1_databases.push({binding:'ACCOUNTS_DB',database_name:'ragbaz-cc-accounts',database_id:process.env.RAGBAZ_ACCOUNTS_D1_ID});
+      production.triggers={crons:['17 3 * * *']};
+    }
+  }
+  await writeFile(join(output, 'wrangler.production.json'), JSON.stringify(production, null, 2) + '\n');
   return output;
 }
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

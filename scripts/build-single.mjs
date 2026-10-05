@@ -58,6 +58,7 @@ export async function buildProject(configPath, outputPath) {
   if (site.publicationPolicy === 'approved-only' && Object.keys(site.assetApprovals || {}).some(p => !copied.has(p))) throw new Error('Unknown asset approval');
   if (site.socialImage) await readFile(join(output, 'public', site.socialImage));
   if (site.logo) await readFile(join(output,'public',site.logo));
+  if (site.featuredPublication?.image) await readFile(join(output, 'public', site.featuredPublication.image));
   const inventory = [];
   async function inventoryAssets(directory, prefix = '') {
     for (const name of (await readdir(directory)).sort()) {

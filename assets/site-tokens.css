@@ -24,5 +24,26 @@
   --site-menu-max-height: 80vh; --site-mobile-brand-width: 13rem;
 }
 html[data-project="grove"] { --project-accent: var(--grove); --project-wash: var(--grove-wash); }
-html[data-project="river"] { --project-accent: var(--river); }
+/* Nostoi / Witness Register. Archival paper, marine ink and brass references.
+   Palette roles extend the shared web authority; reader.css remains responsible
+   for alternate reading themes. Body ornaments use the current reading accent. */
+html[data-project="river"] {
+  --paper-page: #f7f5ee; --paper-inset: #ece9df; --paper-raise: #fcfaf4;
+  --paper-rule: #d7d3c7; --ink-body: #35434a; --ink-emphasis: #183340;
+  --project-accent: #25566b; --project-wash: #e6ecec;
+  --coral: #dec398; --coral-deep: #725330; --ink-link: #725330;
+  --hero-paper: #102631; --hero-muted: #d2dcd9;
+  --hero-loom-glow: rgba(64,105,122,.24); --hero-grove-glow: rgba(135,110,67,.10);
+  --font-display: Georgia, "Times New Roman", serif;
+  --site-radius: .15rem; --site-radius-small: .1rem;
+  --site-hero-size: clamp(4rem,9vw,8rem);
+  --nostoi-ledger-pitch: 2.1rem; --nostoi-grid-pitch: 5.5rem;
+  --nostoi-rule: rgba(222,195,152,.07);
+  --nostoi-stitch: color-mix(in srgb, var(--project-accent) 38%, transparent);
+  --nostoi-stitch-run: .55rem; --nostoi-stitch-gap: .4rem;
+  --nostoi-rail: 2px; --nostoi-title-tracking: -.045em;
+  --nostoi-disc-radius: 50%; --nostoi-mask-solid: #000;
+  --nostoi-mask-start: 14%; --nostoi-mask-end: 78%;
+  --nostoi-contents-columns: repeat(2,minmax(0,1fr));
+}
 html[data-project="home"] { --project-accent: var(--home); }

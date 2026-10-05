@@ -88,4 +88,37 @@ form input:not([type="checkbox"]), form select, form textarea { display: block; 
 @media (max-width: 48rem) { .hero { grid-template-columns: 1fr; } .hero-emblem { justify-self: center; width: var(--site-logo-size); } .highlights, .featured-article, .quickstart, .interest-panel, .studio-footer, .menu-panel { grid-template-columns: 1fr; } .ecosystem-grid, .workflow ol { grid-template-columns: repeat(2,minmax(var(--site-zero),1fr)); } .featured-article, .interest-panel { padding: var(--space-5); } .menu-panel { max-height: var(--site-menu-max-height); overflow-y: auto; } }
 @media (max-width: 28rem) { .studio-brand small { max-width: var(--site-mobile-brand-width); } .form-grid, .workflow ol, .ecosystem-grid { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+/* Nostoi / Witness Register: measured ornament, archival type and marine ink. */
+html[data-project="river"]:not([data-reader-font]) body { font-family: var(--font-text); }
+html[data-project="river"] .hero { position: relative; border-bottom-color: var(--coral); }
+html[data-project="river"] .hero::before {
+  content: ""; position: absolute; inset: var(--site-zero); pointer-events: none;
+  background: repeating-linear-gradient(var(--nostoi-rule) var(--site-zero) var(--site-rule), transparent var(--site-rule) var(--nostoi-ledger-pitch)), repeating-linear-gradient(to right,var(--nostoi-rule) var(--site-zero) var(--site-rule),transparent var(--site-rule) var(--nostoi-grid-pitch));
+  mask-image: linear-gradient(to bottom, transparent, var(--nostoi-mask-solid) var(--nostoi-mask-start), var(--nostoi-mask-solid) var(--nostoi-mask-end), transparent);
+}
+html[data-project="river"] .hero h1 { letter-spacing: var(--nostoi-title-tracking); }
+html[data-project="river"] .hero .deck { color: var(--hero-ink); }
+html[data-project="river"] .hero-emblem img { border-radius: var(--nostoi-disc-radius); border: var(--site-rule) solid var(--coral); }
+html[data-project="river"] .hero .button.primary { color: var(--hero-paper); }
+html[data-project="river"] .section-number { border: var(--site-zero); padding: var(--site-zero); margin-inline-end: var(--space-3); color: var(--project-accent); }
+html[data-project="river"] .prose-section h2 { position: relative; padding-bottom: var(--space-4); }
+html[data-project="river"] .prose-section h2::after {
+  content: ""; position: absolute; inset-inline: var(--site-zero); bottom: var(--site-zero); height: var(--site-rule);
+  background: repeating-linear-gradient(to right, var(--nostoi-stitch) var(--site-zero) var(--nostoi-stitch-run), transparent var(--nostoi-stitch-run) calc(var(--nostoi-stitch-run) + var(--nostoi-stitch-gap)));
+}
+html[data-project="river"] .highlights article, html[data-project="river"] .publication-card {
+  border: var(--site-zero); border-inline-start: var(--nostoi-rail) solid var(--project-accent);
+  border-radius: var(--site-zero); padding-inline-start: var(--space-5);
+}
+html[data-project="river"] .contents { display: grid; grid-template-columns: var(--nostoi-contents-columns); }
+html[data-project="river"] .text-links { font-family: var(--reader-font-sans); font-size: var(--type--1); }
+html[data-project="river"] pre {
+  border-inline-start: var(--nostoi-rail) solid var(--project-accent);
+  border-radius: var(--site-zero); background: var(--paper-raise);
+}
+html[data-project="river"] .thread { color: var(--nostoi-stitch); }
+.local-feature .article-art img { display: block; width: var(--site-full); height: auto; }
+.local-feature:not(:has(.article-art)) { grid-template-columns: var(--site-full); }
+@media (max-width: 28rem) { html[data-project="river"] .contents { grid-template-columns: var(--site-full); } }
+@media print { html[data-project="river"] .hero::before, html[data-project="river"] .prose-section h2::after { display: none; } }
 @media print { .site-header, .reading-toolbar, .interest-panel, .main-menu, .actions, .skip { display: none; } .hero { background: var(--paper-page); color: var(--ink-body); display: block; padding-block: var(--space-5); } .hero h1, .hero .deck, .hero p { color: var(--ink-emphasis); } .hero-emblem { display: none; } }

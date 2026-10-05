@@ -67,6 +67,26 @@ The Worker strips that prefix when asking its flat ASSETS binding for a file.
 
 ## Static social images and inventories
 
+### A local featured publication
+
+An optional `featuredPublication` selects an existing published/revised article
+for the home and publication-index lead panel. Sites without it retain the
+shared illustrated field guide. This is structured configuration, not custom HTML:
+
+```json
+"featuredPublication": {
+  "id": "verification",
+  "label": "The witness problem / Brief 01",
+  "linkLabel": "Read the verification brief",
+  "image": "/assets/witness-map.svg",
+  "imageAlt": "Three separate questions about an audit record."
+}
+```
+
+The article must exist and be public. Images are optional, first-party assets;
+an image requires alternative text and the build checks that its file exists.
+Locale links use the actual article edition, with the normal fallback behavior.
+
 Put a cover in the site's `public/assets/cover.webp` and configure
 `socialImage: "/assets/cover.webp"`. The build requires the file and emits
 canonical first-party OG/Twitter image metadata. Alternatively, set

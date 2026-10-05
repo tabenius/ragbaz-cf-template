@@ -105,6 +105,16 @@ export function normalizeSite(input, safeLink) {
     sections(page.sections); translations(page.translations, site.locales, safeLink);
     for (const section of page.sections) checkLinks(section.links);
   }
+  if (site.featuredPublication !== undefined) {
+    const feature = site.featuredPublication;
+    if (!feature || typeof feature !== 'object' || Array.isArray(feature) || Object.keys(feature).some(k => !['id', 'label', 'linkLabel', 'image', 'imageAlt'].includes(k))) throw new Error('Invalid featured publication');
+    if (!site.pages.some(p => p.id === feature.id && p.kind === 'article' && ['published', 'revised'].includes(p.status))) throw new Error('Feature must reference a public article');
+    requireText(feature.label, 'feature label'); requireText(feature.linkLabel, 'feature link label');
+    if (feature.image !== undefined) {
+      if (!/^\/assets\/[a-zA-Z0-9._/-]+\.(svg|png|webp|jpg|jpeg)$/.test(feature.image) || feature.image.includes('..')) throw new Error('Use a first-party feature image');
+      requireText(feature.imageAlt, 'feature image description');
+    } else if (feature.imageAlt !== undefined) throw new Error('Feature description needs an image');
+  }
   site.redirects ??= {};
   for (const [from, to] of Object.entries(site.redirects)) {
     if (!/^\/[a-zA-Z0-9_./-]*$/.test(from) || from.includes('..') || from.startsWith('//') || paths.has(from) || site.locales.some(l => from === `/${l.code}` || from.startsWith(`/${l.code}/`)) || RESERVED.some(p => from === p || from.startsWith(p + '/'))) throw new Error('Invalid redirect source');

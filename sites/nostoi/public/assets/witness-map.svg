@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" role="img" aria-labelledby="title description">
+  <title id="title">The witness problem</title>
+  <desc id="description">Three separate evidence questions arranged around a retained record: sequence integrity, signing-key trust and an external observation. Connecting lines do not merge their conclusions.</desc>
+  <rect width="720" height="480" fill="#ebe7dc"/>
+  <g fill="none" stroke="#d3cdbd" stroke-width="1">
+    <path d="M40 80h640M40 120h640M40 160h640M40 200h640M40 240h640M40 280h640M40 320h640M40 360h640M40 400h640M120 40v400M240 40v400M360 40v400M480 40v400M600 40v400"/>
+    <circle cx="360" cy="238" r="174"/><circle cx="360" cy="238" r="126"/>
+  </g>
+  <g fill="none" stroke="#244e61" stroke-width="1.5">
+    <path d="M360 104 210 330h300ZM360 104v134L210 330m150-92 150 92"/>
+    <circle cx="360" cy="238" r="37"/><circle cx="360" cy="238" r="44" stroke-dasharray="2 6"/>
+  </g>
+  <g fill="#ebe7dc" stroke="#244e61" stroke-width="2">
+    <circle cx="360" cy="104" r="32"/><circle cx="210" cy="330" r="32"/><circle cx="510" cy="330" r="32"/>
+  </g>
+  <g fill="#244e61" font-family="Georgia,serif" font-size="24" text-anchor="middle">
+    <text x="360" y="112">I</text><text x="210" y="338">II</text><text x="510" y="338">III</text>
+  </g>
+  <g fill="#34434a" font-family="monospace" font-size="12" letter-spacing="1.4" text-anchor="middle">
+    <text x="360" y="49">SEQUENCE</text><text x="210" y="390">SIGNING KEY</text><text x="510" y="390">OBSERVATION</text>
+    <text x="360" y="244" font-size="10">RECORD</text>
+  </g>
+  <g stroke="#9e7847" stroke-width="2"><path d="M344 65h32M194 408h32M494 408h32M40 26h68M612 454h68"/></g>
+  <g fill="#6b685b" font-family="monospace" font-size="10" letter-spacing="1.5">
+    <text x="40" y="458">NOSTOI / EVIDENCE ATLAS</text><text x="595" y="30">PLATE 01</text>
+  </g>
+</svg>

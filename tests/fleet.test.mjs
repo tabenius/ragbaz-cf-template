@@ -89,6 +89,29 @@ test('model refuses duplicate routes, impossible dates, unknown modules and miss
     { pages: [{ ...base.pages[0], path: '/api/secret/' }] },
   ]) assert.throws(() => validateSite({ ...base, ...patch }));
 });
+test('featured publications use a real public edition and mounted first-party image', async () => {
+  const page = { ...base.pages[0], title: 'A local <brief>' };
+  const config = { ...base, pages: [page], basePath: '/research', routeZones: { [base.origin]: 'ragbaz.cc' }, featuredPublication: { id: page.id, label: 'Evidence & custody', linkLabel: 'Read the brief', image: '/assets/diagram.svg', imageAlt: 'Three <questions>' } };
+  const worker = createSiteWorker(config);
+  for (const route of ['/research/', '/research/publications/']) {
+    const html = await (await worker.fetch(request(route))).text();
+    assert.ok(html.includes('A local &lt;brief&gt;'));
+    assert.ok(html.includes('src="/research/assets/diagram.svg"'));
+    assert.ok(html.includes('alt="Three &lt;questions&gt;"'));
+    assert.ok(html.includes('href="/research' + page.path + '"'));
+    assert.ok(!html.includes('Read the illustrated field guide'));
+  }
+});
+test('featured publication configuration refuses private references and unsafe media', () => {
+  const feature = { id: base.pages[0].id, label: 'Brief', linkLabel: 'Read' };
+  for (const patch of [
+    { featuredPublication: { ...feature, id: 'missing' } },
+    { pages: [{ ...base.pages[0], status: 'draft' }], featuredPublication: feature },
+    { featuredPublication: { ...feature, image: 'https://example.org/diagram.svg', imageAlt: 'Diagram' } },
+    { featuredPublication: { ...feature, image: '/assets/../secret.svg', imageAlt: 'Diagram' } },
+    { featuredPublication: { ...feature, image: '/assets/diagram.svg' } },
+  ]) assert.throws(() => validateSite({ ...base, ...patch }));
+});
 test('initial publication date controls ordering even when an older page is revised', async () => {
   const older = { ...base.pages[0], id: 'older', path: '/older/', created: '2026-01-01', published: '2026-01-02', updated: '2026-10-03', status: 'revised' };
   const worker = createSiteWorker({ ...base, pages: [older, ...base.pages] });

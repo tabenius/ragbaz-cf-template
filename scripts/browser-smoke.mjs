@@ -87,7 +87,7 @@ try {
     await navigate('/sv/');
     assert.equal(await evaluate(`document.documentElement.lang`), 'sv');
   }
-  if (['nostoi','weftmark'].includes(slug)) {
+  if (['nostoi','weftmark','sylvae'].includes(slug)) {
     await evaluate(`document.querySelector('[data-reader-reset]').click()`);
     for (const width of [1440, 768, 390, 320]) {
       await command('Emulation.setDeviceMetricsOverride', { width, height: 1000, deviceScaleFactor: 1, mobile: false }, sessionId);
@@ -106,9 +106,8 @@ try {
     if (site.modules.demonstration) {
       await evaluate(`document.querySelector('#demonstration').scrollIntoView({behavior:'instant',block:'center'})`);
       assert.equal(await evaluate(`document.querySelectorAll('[data-demo-case]:not([hidden])').length`),1);
-      await evaluate(`(() => {const select=document.querySelector('[data-demo-select]');select.value='stale';select.dispatchEvent(new Event('change'));})()`);
-      assert.equal(await evaluate(`document.querySelector('[data-demo-case="stale"]').hidden`),false);
-      assert.equal(await evaluate(`document.querySelector('[data-demo-case="current"]').hidden`),true);
+      await evaluate(`(() => {const cases=[...document.querySelectorAll('[data-demo-case]')];const select=document.querySelector('[data-demo-select]');select.value=cases[1].dataset.demoCase;select.dispatchEvent(new Event('change'));})()`);
+      assert.equal(await evaluate(`(() => {const cases=[...document.querySelectorAll('[data-demo-case]')];return cases[1].hidden===false&&cases[0].hidden===true;})()`),true);
       const demoShot=await command('Page.captureScreenshot',{format:'png'},sessionId);
       await writeFile(join(output,'browser-demonstration.png'),Buffer.from(demoShot.data,'base64'));
     }

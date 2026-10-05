@@ -46,7 +46,11 @@ for (const { slug, output, config } of scenarios) {
     }
     assert.ok(ready, `workerd did not start: ${log}`);
     const paths = [['/', 200], ['/healthz', 200], ['/robots.txt', 200], ['/sitemap.xml', 200], ['/assets/tokens.css', 200], ['/assets/site.css', 200], ['/assets/reader.js', 200], ['/publications/', 200], ['/api/v1/publications', 200], ['/manifest.json', 200], [config.pages[0].path, 200], ['/assets/missing.css', 404], ['/missing', 404], ['/index.html?old=1', 308]];
-    if (config.locales?.some(l => l.code === 'sv')) paths.push(['/sv/', 200], ['/sv/workflow/', 200]);
+    if (config.locales?.some(l => l.code === 'sv')) {
+      paths.push(['/sv/', 200]);
+      const firstArticle = config.pages.find(p => p.kind === 'article' && p.status !== 'draft');
+      if (firstArticle) paths.push([`/sv${firstArticle.path}`, 200]);
+    }
     for (const [path, status] of paths) {
       const response = await fetch(base + mount + path, { redirect: 'manual' });
       assert.equal(response.status, status, `${slug} ${path}`);

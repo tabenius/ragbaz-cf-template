@@ -37,6 +37,34 @@ a similarly named Worker exists: its contract and access policy must match.
 | provenance | `/api/provenance` | Mouseion public scroll, evidence, attestation and chain views |
 | catalog | `/api/catalog` | main-site GraphQL queries, with mutations refused |
 
+### Optional public catalog snapshot
+
+`src/catalog.js` supplies `catalogSnapshotAdapter(site, loadSnapshot)` for the
+existing `createSiteWorker(site, { adapters })` boundary. It serves only exact
+`GET`/`HEAD /api/v1/catalog` (including the site's mount); writes, subpaths and
+query parameters are refused. The loader must supply explicitly reviewed public
+data, never a workspace dump. No consumer is enabled or deployed by default.
+
+Input schema `ragbaz.public-catalog/v1` contains an HTTPS `source`, original
+UTC `observed_at` (ISO milliseconds), and up to 200 `products`. Products contain
+`id`, `name`, `lifecycle` and string `capabilities`; other fields are discarded.
+Duplicate IDs, malformed records and future observations are refused. Source
+credentials/query/fragment are forbidden. Missing or invalid input returns
+`catalog_snapshot_unavailable` (503), not an empty catalog.
+
+The output includes a SHA-256 `digest` over UTF-8 `JSON.stringify(products)` of
+the projected products, with field order `id`, `name`, `lifecycle`, `capabilities`
+and array order preserved (`digest_scope: projected-products-json`). An optional
+input digest must match. This is an integrity label, not a signature or source
+trust decision. `freshness` reports age and fresh/stale against a configurable
+`maxAgeSeconds` (default 86400), without rewriting the observation time.
+
+**Search boundary:** the snapshot reports `search_scope: none`; it does not index
+publication bodies, private ledgers or remote sites. The existing read-only
+GraphQL adapter delegates any search to its declared authority; it does not
+establish fleet-wide full-text coverage. A future search service needs its own
+explicit public-document scope, provenance and refusal contract.
+
 The exact method/path allowlist is `src/integrations.js`. Only those paths are
 forwarded to the named service binding. Request bodies are streamed with a
 64 KiB default ceiling; `maxBytes` may set an explicit ceiling up to 2 MiB.

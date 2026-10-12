@@ -52,6 +52,12 @@ Duplicate IDs, malformed records and future observations are refused. Source
 credentials/query/fragment are forbidden. Missing or invalid input returns
 `catalog_snapshot_unavailable` (503), not an empty catalog.
 
+Product and capability arrays must be dense: missing array entries are invalid,
+not silently discarded. Snapshot labels and an optional digest pin are captured
+before asynchronous hashing so reuse/mutation of a loader's object cannot
+relabel the observation. HEAD responses remain bodyless for failures as well as
+successful snapshots, preserving the corresponding status and headers.
+
 The output includes a SHA-256 `digest` over UTF-8 `JSON.stringify(products)` of
 the projected products, with field order `id`, `name`, `lifecycle`, `capabilities`
 and array order preserved (`digest_scope: projected-products-json`). An optional

@@ -76,3 +76,30 @@ test('snapshot integrates with the mounted Worker and retains security headers a
     assert.ok(!response.headers.has('Set-Cookie'));
   }
 });
+
+test('sparse product and capability arrays fail closed rather than hiding missing records', async () => {
+  await assert.rejects(catalogSnapshot({ ...fixture(), products: new Array(1) }, { now }));
+  await assert.rejects(catalogSnapshot({ ...fixture(), products: [{ ...fixture().products[0], capabilities: new Array(1) }] }, { now }));
+});
+
+test('observation labels and digest pin are captured before asynchronous hashing', async () => {
+  const input = fixture();
+  const observed = input.observed_at;
+  const result = catalogSnapshot(input, { now });
+  input.observed_at = '2099-01-01T00:00:00.000Z';
+  input.schema = 'private';
+  input.digest = '0'.repeat(64);
+  const snapshot = await result;
+  assert.equal(snapshot.schema, 'ragbaz.public-catalog/v1');
+  assert.equal(snapshot.observed_at, observed);
+  assert.equal(snapshot.freshness.age_seconds, 3600);
+});
+
+test('HEAD refusals and unavailable snapshots carry status and headers but no body', async () => {
+  const adapter = catalogSnapshotAdapter({}, () => null, { now });
+  for (const [suffix, status] of [['', 503], ['?q=x', 400], ['/private', 404]]) {
+    const response = await adapter.fetch(new Request('https://site.ragbaz.cc/api/v1/catalog' + suffix, { method: 'HEAD' }));
+    assert.equal(response.status, status);
+    assert.equal(await response.text(), '');
+  }
+});

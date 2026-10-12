@@ -14,6 +14,7 @@ test('standalone scaffold builds without the original workspace and refuses over
     execFileSync(process.execPath, [join(root, 'scripts/scaffold.mjs'), 'nostoi', target]);
     const lock = JSON.parse(await readFile(join(target, 'template.lock.json')));
     assert.equal(lock.source_kind, 'working-tree-snapshot');
+    assert.ok(lock.files['docs/examples/kanban-consumer.mjs'], 'nested documentation is included and hash-pinned');
     assert.ok(Object.keys(lock.files).every(file => !file.split('/').some(part => part.startsWith('.') || /(?:\.sw[op]|~)$/.test(part))));
     for (const [file, hash] of Object.entries(lock.files)) {
       assert.equal(createHash('sha256').update(await readFile(join(target, 'vendor/ragbaz-cf-template', file))).digest('hex'), hash);

@@ -22,7 +22,7 @@
                Palatino, "Book Antiqua", Georgia, serif;
   --font-display: "TeX Gyre Schola", "URW Bookman L", "Bookman Old Style",
                   var(--font-text);
-  --font-mono: "Fira Code", "DejaVu Sans Mono", ui-monospace, monospace;
+  --font-mono: "Hack Nerd Font Mono", "Fira Code", "DejaVu Sans Mono", ui-monospace, monospace;
   --font-symbol: "DejaVu Sans", "Noto Sans Symbols 2", sans-serif;
 
   /* --- Type scale ----------------------------------------------------------

@@ -15,14 +15,17 @@ try { await lstat(target); throw new Error('Destination already exists'); } catc
 await mkdir(target);
 const inventory = {};
 const files = ['scripts/build-single.mjs', 'scripts/social-card.mjs', 'scripts/approvals.mjs', 'scripts/approval-digests.mjs', 'package.json', 'AGENTS.md', 'README.md','migrations/peers/0001_peers.sql','migrations/peers/0002_detcordon_import.sql'];
-for (const directory of ['src', 'assets', 'design', 'docs']) {
-  for (const file of await readdir(join(root, directory))) {
+async function collectFiles(directory) {
+  for (const file of (await readdir(join(root, directory))).sort()) {
     if (file.startsWith('.') || /(?:\.sw[op]|~)$/.test(file)) continue;
     const name = `${directory}/${file}`;
-    if (!(await lstat(join(root, name))).isFile()) throw new Error(`Unsupported template entry ${name}`);
-    files.push(name);
+    const entry = await lstat(join(root, name));
+    if (entry.isDirectory()) await collectFiles(name);
+    else if (entry.isFile()) files.push(name);
+    else throw new Error(`Unsupported template entry ${name}`);
   }
 }
+for (const directory of ['src', 'assets', 'design', 'docs']) await collectFiles(directory);
 for (const file of files.sort()) {
   const bytes = await readFile(join(root, file));
   const output = join(target, 'vendor/ragbaz-cf-template', file);

@@ -1,0 +1,32 @@
+{
+  "schema": "ragbaz.content-vendor/v0",
+  "source": "ragbaz-common/src/content",
+  "note": "Shared content layer: Markdoc rendering, llms.txt v2 generation, and llms.txt link relations. Regenerate with scripts/vendor-content.mjs; verify with --check.",
+  "files": [
+    {
+      "file": "src/content/index.js",
+      "source": "ragbaz-common/src/content/index.js",
+      "sha256": "6e4380f83e16f6c8b8aa8ef4adc74b46bde8117f625fbc4b0bc5e94669ee7f53"
+    },
+    {
+      "file": "src/content/markdoc.js",
+      "source": "ragbaz-common/src/content/markdoc.js",
+      "sha256": "85153fa5278d785809208657f7645489230ffcc149684ee234103f1143bb7cff"
+    },
+    {
+      "file": "src/content/compat.js",
+      "source": "ragbaz-common/src/content/compat.js",
+      "sha256": "8c662cfa063100f8bcb4438f7b3d777006ced906fc860af42688731e185a46e7"
+    },
+    {
+      "file": "src/content/llms-txt.js",
+      "source": "ragbaz-common/src/content/llms-txt.js",
+      "sha256": "cd3bbb8916ff76845fe3ce6e3c075b81dcbbe7ee33c688bc17272f24101c439c"
+    },
+    {
+      "file": "src/content/link-relations.js",
+      "source": "ragbaz-common/src/content/link-relations.js",
+      "sha256": "ade94f0788569cd2f4762f7e14ca39e08f049486f64f5dfc8ae7e62fa7b421b1"
+    }
+  ]
+}
